@@ -1,4 +1,6 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
+
 namespace RecipeWebApp.Models;
 
 /// <summary>
@@ -9,6 +11,7 @@ public class User
     /// <summary>
     /// Унікальний ідентифікатор користувача.
     /// </summary>
+    [Key]
     public int Id { get; set; }
 
     /// <summary>

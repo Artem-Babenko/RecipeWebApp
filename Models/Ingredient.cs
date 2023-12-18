@@ -1,4 +1,5 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
 namespace RecipeWebApp.Models;
@@ -11,6 +12,7 @@ public class Ingredient
     /// <summary>
     /// Унікальний ідентифікатор інгредієнта.
     /// </summary>
+    [Key]
     public int Id { get; set; }
 
     /// <summary>
