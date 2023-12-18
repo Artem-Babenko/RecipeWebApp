@@ -17,7 +17,10 @@ public class RecipeController : Controller
     [Route("/recipes")]
     public async Task<IActionResult> GetRecipes()
     {
-        var recipes = await db.Recipes.ToListAsync();
+        var recipes = await db.Recipes
+            .Include(recipe => recipe.Category)
+            .ToListAsync();
+
         return Json(recipes); 
     }
 }
