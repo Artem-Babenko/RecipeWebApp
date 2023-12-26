@@ -1,0 +1,332 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700;900&family=Ubuntu:wght@300;400;500;700&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    list-style: none;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 1000px;
+}
+
+/* Голова сайту */
+
+header {
+    background-color: #222;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    transition: all 0.5s ease;
+}
+
+.top{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.top .name{
+    font-size: 30px;
+    font-weight: 700;
+    padding: 20px 40px;
+}
+
+.top i{
+    padding: 10px;
+    font-size: 30px;
+    margin-right: 25px;
+    color: #BC4749;
+}
+
+/* Картинка */
+
+img{
+    width: calc(100% - 40px);
+    margin: 0 20px;
+    border-radius: 10px;
+}
+
+/* Таблиця з даними */
+
+table{
+    width: 100%;
+    padding: 20px 20px 10px;
+}
+
+table th{
+    font-weight: 500;
+}
+
+table td{
+    text-align: center;
+    color: #333;
+    padding: 4px;
+}
+
+table .rating{
+    color: #BC4749;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+table .rating i{
+    padding: 0 1px;
+}
+
+table .rating span {
+    color: #333;
+    padding-left: 5px;
+}
+
+/* Опис */
+
+.description {
+    padding: 10px 30px;
+    line-height: 25px;
+    word-spacing: 0.5px;
+    letter-spacing: 0.5px;
+    font-size: 16px;
+    color: #333;
+    font-weight: 400;
+}
+
+/* Список інгредієнтів */
+
+.ingredient-list {
+    margin: 15px 30px;
+    padding: 10px 20px;
+    border-top: 1px #BC4749 solid;
+    border-bottom: 1px #BC4749 solid;
+    letter-spacing: 0.5px;
+    word-spacing: 0.5px;
+}
+
+.ingredient-list h2{
+    padding: 10px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.ingredient-list .row{
+    padding: 10px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px #e3e3e3 solid;
+}
+
+.ingredient-list .row:last-of-type{
+    border: none;
+}
+
+
+.ingredient-list .row div{
+    font-size: 16px;
+}
+
+/* Список кроків */
+
+.step-list {
+    padding: 10px 40px;
+    letter-spacing: 0.5px;
+    word-spacing: 0.5px;
+    line-height: 25px;
+    margin: 10px 0;
+}
+
+.step-list h2{
+    padding: 10px;
+    text-align: center;
+}
+
+.step-list .row{
+    display: flex;
+    align-items: start;
+    padding: 10px;
+}
+
+.step-list .row .index{
+    min-width: 40px;
+    padding-right: 15px;
+    text-align: right;
+    color: #BC4749;
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.step-list .row .title{
+    font-size: 16px;
+}
+
+/* Панель створення коментаря */
+
+.create-comment{
+    padding: 10px 40px;
+    background-color: #222;
+    color: white;
+    transition: all 0.5s ease;
+}
+
+.create-comment h2{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+.create-comment h2 span{
+    font-size: 18px;
+    font-weight: 500;
+    color: #999;
+}
+
+.create-comment h2 span i{
+    padding: 0 3px;
+}
+
+.create-comment input, .create-comment textarea{
+    padding: 10px 20px;
+    margin: 7px 5px;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    word-spacing: 0.5px;
+    line-height: 25px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background-color: #333;
+    color: white;
+    width: calc(100% - 10px);
+    resize: none;
+}
+
+.create-comment .rating{
+    background-color: #333;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin: 5px 5px;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    word-spacing: 0.5px;
+}
+
+.create-comment .rating i{
+    padding: 5px 0;
+    color: #BC4749;
+}
+
+.create-comment .rating p{
+    font-size: 14px;
+    color: #666;
+    padding-top: 5px;
+}
+
+.create-comment .rating span{
+    padding: 0 5px;
+}
+
+.create-comment button{
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    word-spacing: 0.5px;
+    border: none;
+    outline: none;
+    padding: 10px 20px;
+    margin: 15px 10px;
+    border-radius: 10px;
+    background-color: #BC4749;
+    color: white;
+}
+
+/* Список коментарів */
+
+.comments {
+    margin: 0 40px;
+    padding: 10px 0;
+    border-bottom: 1px solid #BC4749;
+}
+
+.comments h2{
+    text-align: center;
+    padding: 10px;
+}
+
+.comments .comment{
+    padding: 10px 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    letter-spacing: 0.5px;
+    word-spacing: 0.3px;
+    line-height: 25px;
+}
+
+.comments .comment .info{
+    flex-basis: 90%;
+}
+
+.comments .comment .info .user-name{
+    font-size: 16px;
+    font-weight: 700;
+    padding: 0 1px;
+}
+
+.comments .comment .info .rating{
+    display: flex;
+    align-items: center;
+    padding: 2px 0;
+}
+
+.comments .comment .info .rating i{
+    color: #BC4749;
+    padding-right: 2px;
+}
+
+.comments .comment .info .title{
+    padding: 5px 0;
+}
+
+.comments .comment .info .create-time{
+    font-size: 14px;
+    color: #777;
+}
+
+.comments .comment .count-of-likes{
+    flex-basis: 10%;
+    text-align: right;
+    color: #BC4749;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+/* Низ сторінки */
+
+footer{
+    color: #777;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    word-spacing: 0.5px;
+    text-align: center;
+    padding: 20px 40px;
+}
+
+@media screen and (width > 1000px){
+    header{
+        margin-top: 10px;
+        border-radius: 10px;
+    }
+
+    .create-comment{
+        border-radius: 10px;
+    }
+}

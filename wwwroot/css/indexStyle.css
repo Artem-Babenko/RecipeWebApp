@@ -8,124 +8,322 @@
     font-family: 'Roboto', sans-serif;
 }
 
-body{
-    background-color: #e7ede6;
-}
-
-header{
-    text-align: center;
-}
-
-header h2{
-    font-size: 30px;
-    color: black;
-    padding: 20px 0;
-}
-
-nav{
+body {
+    background-color: white;
     display: flex;
-    background-color: #386641;
+    flex-direction: column;
+    justify-content: center;
+    margin: 0 auto;
+    max-width: 1200px;
+}
+
+/* Голова сайту */
+
+header .top{
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+header .top a:not(.site-name){
+    text-decoration: none;
+    color: white;
+    font-size: 17px;
+    letter-spacing: 0.5px;
+    background-color: #BC4749;
+    border-radius: 20px;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.3s ease;
+}
+
+header .top a:hover:not(.site-name){
+    background-color: #d43033;
+}
+
+header .top .site-name{
+    text-decoration: none;
+    color: black;
+    font-size: 30px;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+header .top .site-name:hover{
+    color: #BC4749;
+}
+
+header .bottom {
+    background-color: #222;
+    padding: 20px 40px;
+    display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px 30px;
+    transition: all 0.5s ease;
 }
 
-nav .search{
+header .bottom .main-categories{
     display: flex;
-    justify-content: center;
 }
 
-nav .search input{
+header .bottom .main-categories button{
+    padding: 10px 20px;
+    border: none;
+    outline: none;
+    background-color: transparent;
+    color: white;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+
+/* Пошук */
+
+header .bottom .search-container{
+    display: flex;
+}
+
+header .bottom .search-container input{
     border: none;
     outline: none;
     padding: 10px 20px;
     font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    word-spacing: 0.5px;
     border-radius: 10px 0 0 10px;
-    width: calc(100% + 300px);
 }
 
-nav .search #searchButton{
-    background-color: #BC4749;
-    color: white;
-    padding: 10px 20px;
+header .bottom .search-container button {
     border: none;
+    outline: none;
+    padding: 10px 20px;
     font-size: 16px;
     font-weight: 500;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
+    letter-spacing: 0.5px;
     border-radius: 0 10px 10px 0;
-    transition: all 0.3s ease;
-}
-
-nav .search #searchButton:hover{
-    background-color: #b24345;
-}
-
-#searchButton i{
-    font-size: 20px;
-    margin-right: 5px;
-}
-
-nav .main-categories{
-    display: flex;
-    gap: 5px;
-    width: 100%;
-    overflow: hidden;
-}
-
-nav .main-categories div{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 7px 14px;
+    background-color: #BC4749;
     color: white;
-    font-weight: 500;
-    font-size: 20px;
     cursor: pointer;
-    border-radius: 10px;
     transition: all 0.2s ease;
 }
 
-nav .main-categories div:hover{
-    background-color: #4d8b59;
+header .bottom .search-container button:hover{
+    background-color: #d43033;
 }
 
+/* Центр сайту */
+
 main {
+    display: block;
+}
+
+/* Ліва навігаційна панель з категоріями */
+main nav{
+    width: calc(33% - 40px);
+    border-radius: 10px;
+    background-color: #222;
+    color: white;
+    margin: 20px 20px 0 20px;
+    overflow: hidden;
+    float: left;
+}
+
+main nav .categories .category {
+    display: flex;
+    flex-direction: column;
+    list-style-type: none;
+    cursor: pointer;
+    font-size: 17px;
+    letter-spacing: 0.5px;
+    word-spacing: 0.5px;
+    font-weight: 500;
+    border-bottom: 1px solid #494445;    
+}
+
+main nav .categories .category div:not(.category):not(.name){
+    margin: 10px 0;
+}
+
+main nav .categories .category:last-child{
+    border: none;
+}
+
+main nav .categories .category .category{
+    margin: 0 15px;
+}
+
+main nav .categories .category .category .category{
+    margin: 0 30px;
+}
+
+main nav .categories .category .name{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 15px;
+    transition: all 0.3s ease;
+}
+
+main nav .categories .category .name:hover{
+    background-color: #333;
+    border-radius: 5px;
+}
+
+main nav .categories .category .name .toggle-btn{
+    background: #BC4749;
+    color: white;
+    font-weight: 600;
+    border-radius: 10px;
+    text-align: right;
+    height: 25px;
+    width: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Контент */
+
+main .content{
+    padding-top: 10px;
+}
+
+/* Сортбар */
+
+main .content .sortbar{
+    display: flex;
+    background-color: #222;
+    color: white;
+    gap: 20px;
+    margin-top: 10px;
+    margin-right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    word-spacing: 0.5px;
+    border-radius: 10px;
+}
+
+/* Інформація про виведений контент */
+
+main .content .content-name{
+    display: none; /*flex*/
+    flex-direction: column;
+    background-color: #222;
+    margin-top: 10px;
+    margin-right: 20px;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    word-spacing: 0.5px;
+    border-radius: 10px;
+    color: white;
+    overflow: hidden;
+}
+
+main .content-name .top{
+    background-color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    border-radius: 10px;
+}
+
+main .content-name .top span{
+    color: #ccc;
+}
+
+/* Інформація про дочірні категої */
+
+main .content-name .bottom{
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5px 10px;
+}
+
+main .content-name .bottom .subcategory-button{
+    padding: 5px 10px;
+    display: flex;
+    align-items: start;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+main .content-name .bottom .subcategory-button:hover{
+    background-color: #333;
+}
+
+main .content-name .bottom .subcategory-button span{
+    font-size: 13px;
+    font-weight: 600;
+    color: #BC4749;
+    padding-left: 5px;
+}
+
+/* Інформація про шлях */
+
+main .content .path{
+    display: none; /*flex*/
+    background-color: #222;
+    color: #ccc;
+    margin-top: 10px;
+    margin-right: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    word-spacing: 0.5px;
+    border-radius: 10px;
+}
+
+/* Рецепти */
+
+main .recipes{
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     margin: 20px;
+    width: calc(66% - 10px);
 }
 
-main .item {
-    flex-basis: calc(25% - 10px);
+main .recipes .item {
+    position: relative;
+    flex-basis: calc(50% - 10px);
     display: flex;
     flex-direction: column;
     background-color: white;
     border-radius: 10px;
     overflow: hidden;
     cursor: pointer;
+    letter-spacing: 0.5px;
+    word-spacing: 0.5px;
+    line-height: 20px;
     transition: all 0.3s ease;
 }
 
-main .item:hover{
+main .recipes .item:hover{
     box-shadow: 1px 3px 10px rgba(0, 0, 0, 0.2);
 }
 
-main .item img{
+main .recipes .item img{
     width: 100%;
     object-fit: cover;
 }
 
-main .item .name{
+main .recipes .item .name{
     text-align: center;
     padding: 10px 0;
     font-size: 18px;
     font-weight: 500;
 }
 
-main .item .category{
+main .recipes .item .category{
     position: absolute;
     padding: 5px 10px;
     background-color: #BC4749;
@@ -134,65 +332,67 @@ main .item .category{
     font-weight: 500;
 }
 
-main .item .stars{
+main .recipes .item .stars{
     display: flex;
     justify-content: center;
 }
 
-main .item .stars i{
+main .recipes .item .stars i{
     color: #BC4749;
     font-size: 16px;
+    padding: 0 1px;
 }
 
-main .item .stars .rating{
+main .recipes .item .stars .rating{
     padding-left: 5px;
     font-size: 14px;
     font-weight: 500;
 }
 
-main .item .description{
+main .recipes .item .description{
     flex: 1;
     padding: 10px 15px;
     font-size: 15px;
     overflow: hidden;
 }
 
-main .item .name, main .item .stars, main .item .description{
-    border: 1px solid #386641;
+main .recipes .item .name, main .item .stars, main .item .description{
+    border: 1px solid #222;
     border-top: none;
     border-bottom: none;
 }
 
-main .item .footer{
+main .recipes .item .footer{
     display: flex;
     justify-content: space-around;
     align-items: flex-end;
     font-size: 14px;
     color: white;
     padding: 5px 0;
-    background-color: #386641;
+    background-color: #222;
 }
 
-main .item .footer div{
+main .recipes .item .footer div{
     display: flex;
     align-items: center;
     gap: 5px;
 }
 
-@media screen and (width < 1400px){
-    main .item{
-        flex-basis: calc(33% - 10px);
+/* Оптимізація відображення */
+
+@media screen and (width > 1200px){
+    header .bottom{
+        border-radius: 20px;
     }
 }
 
-@media screen and (width < 1100px){
-    main .item{
-        flex-basis: calc(50% - 10px);
+@media screen and (width < 1000px){
+    header .bottom{
+        padding: 15px;
     }
-}
 
-@media screen and (width < 600px){
-    main .item{
-        flex-basis: 100%;
+    header .bottom .main-categories button {
+        padding: 5px 10px;
+        font-size: 17px;
     }
 }
