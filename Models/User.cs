@@ -1,5 +1,6 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace RecipeWebApp.Models;
 
@@ -37,5 +38,6 @@ public class User
     /// <summary>
     /// Список рецептів, створених користувачем.
     /// </summary>
+    [JsonIgnore]
     public List<Recipe> Recipes { get; set; } = new List<Recipe>();
 }

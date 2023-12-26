@@ -28,12 +28,17 @@ public class Recipe
     /// <summary>
     /// Шлях до фотографії рецепту.
     /// </summary>
-    public string? PhotoPath { get; set; }
+    public string? PhotoName { get; set; }
 
     /// <summary>
     /// Рейтинг страви від 0.0 до 5.
     /// </summary>
     public float Rating { get; set; } = 0.0f;
+
+    /// <summary>
+    /// Складність приготування завдання.
+    /// </summary>
+    public string? Difficulty { get; set; }
 
     /// <summary>
     /// Кількість переглядів рецепту.
@@ -51,6 +56,16 @@ public class Recipe
     public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
 
     /// <summary>
+    /// Список кроків приготування страви.
+    /// </summary>
+    public List<CookingStep> CookingSteps { get; set; } = new List<CookingStep>();
+
+    /// <summary>
+    /// Список коментарів, які належать рецепту.
+    /// </summary>
+    public List<Comment> Comments { get; set; } = new List<Comment>();
+
+    /// <summary>
     /// Дата створення рецепта.
     /// </summary>
     public DateTime CreateDate { get; set; } = DateTime.Now;
@@ -58,13 +73,11 @@ public class Recipe
     /// <summary>
     /// Користувач, якому належить цей рецепт.
     /// </summary>
-    [JsonIgnore]
     public User? User { get; set; }
 
     /// <summary>
     /// Ідентифікатор користувача, якому належить цей рецепт.
     /// </summary>
-    [JsonIgnore]
     public int UserId { get; set; }
 
     /// <summary>

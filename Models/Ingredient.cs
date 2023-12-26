@@ -21,6 +21,16 @@ public class Ingredient
     public string? Name { get; set; }
 
     /// <summary>
+    /// Кількість інгредієнта.
+    /// </summary>
+    public double Amount { get; set; }
+
+    /// <summary>
+    /// Одиниці вимірювання інгредієнта.
+    /// </summary>
+    public string? Unit { get; set; }
+
+    /// <summary>
     /// Рецепт, якому належить цей інгредієнт.
     /// </summary>
     [JsonIgnore]
@@ -29,6 +39,5 @@ public class Ingredient
     /// <summary>
     /// Ідентифікатор рецепту, якому належить цей інгредієнт.
     /// </summary>
-    [JsonIgnore]
     public int RecipeId { get; set; }
 }
