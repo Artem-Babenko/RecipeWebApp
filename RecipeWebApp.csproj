@@ -7,9 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\html\" />
-    <Folder Include="wwwroot\js\" />
-    <Folder Include="wwwroot\css\" />
     <Folder Include="wwwroot\photos\" />
   </ItemGroup>
 
@@ -20,6 +17,21 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\photos\chef-salad.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\photos\chocolate-cake.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\photos\pizza-cheese-tomatoes-olives.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\photos\rybni-kotlety.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,6 @@
 
 
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using RecipeWebApp.Models;
@@ -19,14 +20,23 @@ class Program
             options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
             {
                 "text/html",
-                "text/css",
-                "text/javascript",
                 "application/json"
             });
         });
+        builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+        {
+            options.Cookie.HttpOnly = false;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            options.Cookie.Name = "AuthenticationCookie";
+            options.AccessDeniedPath = "/login";
+            options.LoginPath = "/login";
+        });
+        builder.Services.AddAuthorization();
         WebApplication app = builder.Build();
 
         app.UseStaticFiles();
+        app.UseAuthentication();
+        app.UseAuthorization();
         app.UseResponseCompression();
 
         app.MapControllers();
