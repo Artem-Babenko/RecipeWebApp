@@ -23,4 +23,34 @@ public class PageController : Controller
     {
         return File("html/recipe.html", "text/html; charset=utf-8;");
     }
+
+    /// <summary>
+    /// Надсилає сторінку входу.
+    /// </summary>
+    [HttpGet]
+    [Route("/login")]
+    public IActionResult GetLoginPage()
+    {
+        return File("html/login.html", "text/html; charset=utf-8;");
+    }
+
+    /// <summary>
+    /// Надсилає сторінку реєстрації.
+    /// </summary>
+    [HttpGet]
+    [Route("/registration")]
+    public IActionResult GetRegistrationPage()
+    {
+        return File("html/registration.html", "text/html; charset=utf-8;");
+    }
+
+    /// <summary>
+    /// Надсилає сторінку профілю.
+    /// </summary>
+    [HttpGet]
+    [Route("/profile")]
+    public IActionResult GetProfilePage()
+    {
+        return File("html/profile.html", "text/html; charset=utf-8;");
+    }
 }

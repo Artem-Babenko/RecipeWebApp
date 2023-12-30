@@ -53,13 +53,16 @@ public class CategoryController : Controller
             .Include(c => c.Recipes)
             .Include(c => c.Subcategories)
                 .ThenInclude(c => c.Recipes)
+                .ThenInclude(r => r.Comments)
             .Include(c => c.Subcategories)
                 .ThenInclude(c => c.Subcategories)
                 .ThenInclude(c => c.Recipes)
+                .ThenInclude(r => r.Comments)
             .Include(c => c.Subcategories)
                 .ThenInclude(c => c.Subcategories)
                     .ThenInclude(c => c.Subcategories)
                     .ThenInclude(c => c.Recipes)
+                    .ThenInclude(r => r.Comments)
             .FirstOrDefaultAsync(c => c.Id == id);
 
         if (category is null) return NotFound();
@@ -103,10 +106,10 @@ public class CategoryController : Controller
     {
         var recipes = new List<Recipe>();
 
-        // Додайте рецепти поточної категорії
+        // Додайте рецепти поточної категорії.
         recipes.AddRange(category.Recipes);
 
-        // Рекурсивно додайте рецепти для дочірніх категорій
+        // Рекурсивно додайте рецепти для дочірніх категорій.
         foreach (var subcategory in category.Subcategories)
         {
             recipes.AddRange(GetRecipesInCategory(subcategory));
