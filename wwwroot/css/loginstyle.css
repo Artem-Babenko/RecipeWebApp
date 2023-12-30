@@ -1,0 +1,124 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Roboto:wght@300;400;500;700;900&family=Ubuntu:wght@300;400;500;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: white;
+}
+
+header{
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    padding: 20px;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: 0.5px;
+    word-spacing: 0.5px;
+    background-color: #222;
+}
+
+.container {
+    padding: 10px 40px 10px 40px;
+    border-radius: 10px;
+    background-color: #222;
+    color: white;
+    letter-spacing: 0.5px;
+    word-spacing: 0.5px;
+    width: 90%;
+    max-width: 360px;
+}
+
+.container .form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.container h2 {
+    text-align: center;
+    margin: 10px;
+    font-size: 25px;
+    letter-spacing: 1px;
+}
+
+.container .form p {
+    margin: 5px 0px;
+    width: 100%;
+}
+
+.container .form p:last-of-type{
+    margin: 6px 0 0;
+    font-size: 15px;
+    text-align: center;
+}
+
+.container .form p:last-of-type a {
+    color: #eb4c4f;
+    font-weight: 600;
+}
+
+.container .form p:last-of-type a:hover{
+    color: #fe171b;
+}
+
+.container .form p input {
+    outline: 2px solid transparent;
+    border: none;
+    color: white;
+    border-radius: 10px;
+    padding: 6px 12px;
+    width: 100%;
+    letter-spacing: 0.5px;
+    word-spacing: 0.5px;
+    font-size: 16px;
+    caret-color: white;
+    background-color: #d6e3dc32;
+    box-shadow: inset 1px 3px 5px rgba(0, 0, 0, 0.05);
+}
+
+.container .form p label {
+    line-height: 25px;
+    margin-left: 3px;
+}
+
+#error{
+    display: none;
+    /*width: 100%;
+    padding-left: 5px;
+    text-align: left;*/
+    font-size: 15px;
+    color: red;
+    font-weight: 400;
+    transition: all 1s ease;
+}
+
+.container button {
+    margin: 15px;
+    padding: 10px 15px;
+    color: white;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 17px;
+    background-color: #BC4749;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.container button:hover {
+    background-color: #d43033;
+}

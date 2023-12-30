@@ -20,11 +20,31 @@ body {
 /* Голова сайту */
 
 header {
+    position: relative;
     background-color: #222;
     color: white;
     text-align: center;
-    padding: 15px;
+    padding: 18px;
+    font-size: 20px;
+    box-shadow: 1px 3px 10px rgba(0,0,0,0.2);
     transition: all 0.5s ease;
+}
+
+header a.home{
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 15px 30px;
+    padding: 10px 20px;
+    background-color: #BC4749;
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+    font-size: 18px;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .top{
@@ -173,6 +193,7 @@ table .rating span {
     padding: 10px 40px;
     background-color: #222;
     color: white;
+    box-shadow: 1px 3px 10px rgba(0,0,0,0.2);
     transition: all 0.5s ease;
 }
 

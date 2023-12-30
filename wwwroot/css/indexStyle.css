@@ -37,6 +37,7 @@ header .top a:not(.site-name){
     display: flex;
     align-items: center;
     gap: 5px;
+    box-shadow: 1px 3px 10px rgba(0,0,0,0.2);
     transition: all 0.3s ease;
 }
 
@@ -60,10 +61,11 @@ header .top .site-name:hover{
 
 header .bottom {
     background-color: #222;
-    padding: 20px 40px;
+    padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 1px 3px 10px rgba(0,0,0,0.2);
     transition: all 0.5s ease;
 }
 
@@ -73,6 +75,7 @@ header .bottom .main-categories{
 
 header .bottom .main-categories button{
     padding: 10px 20px;
+    border-radius: 10px;
     border: none;
     outline: none;
     background-color: transparent;
@@ -80,6 +83,12 @@ header .bottom .main-categories button{
     font-size: 18px;
     letter-spacing: 0.5px;
     font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+header .bottom .main-categories button:hover{
+    background-color: #333;
 }
 
 /* Пошук */
@@ -132,6 +141,7 @@ main nav{
     margin: 20px 20px 0 20px;
     overflow: hidden;
     float: left;
+    box-shadow: 1px 3px 10px rgba(0,0,0,0.2);
 }
 
 main nav .categories .category {
@@ -179,10 +189,11 @@ main nav .categories .category .name .toggle-btn{
     background: #BC4749;
     color: white;
     font-weight: 600;
+    font-size: 18px;
     border-radius: 10px;
     text-align: right;
-    height: 25px;
-    width: 25px;
+    height: 30px;
+    width: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -191,23 +202,48 @@ main nav .categories .category .name .toggle-btn{
 /* Контент */
 
 main .content{
+    display: flex;
+    flex-direction: column;
     padding-top: 10px;
+    margin-right: 20px;
 }
 
 /* Сортбар */
 
 main .content .sortbar{
     display: flex;
+    align-items: center;
     background-color: #222;
-    color: white;
-    gap: 20px;
+    color: #ccc;
+    gap: 10px;
     margin-top: 10px;
-    margin-right: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 5px 20px;
+    font-size: 15px;
     letter-spacing: 0.5px;
     word-spacing: 0.5px;
     border-radius: 10px;
+    box-shadow: 1px 3px 10px rgba(0,0,0,0.2);
+}
+
+main .content .sortbar .sort-btn{
+    padding: 5px;
+    padding-left: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    color: white;
+    display: flex; 
+    align-items: center;
+    gap: 5px;
+    user-select: none;
+    transition: all 0.2s ease;
+}
+
+main .content .sortbar .sort-btn.active{
+    background-color: #333;
+}
+
+main .content .sortbar .sort-btn:hover{
+    background-color: #333;
 }
 
 /* Інформація про виведений контент */
@@ -217,13 +253,13 @@ main .content .content-name{
     flex-direction: column;
     background-color: #222;
     margin-top: 10px;
-    margin-right: 20px;
     font-size: 16px;
     letter-spacing: 0.5px;
     word-spacing: 0.5px;
     border-radius: 10px;
     color: white;
     overflow: hidden;
+    box-shadow: 1px 3px 10px rgba(0,0,0,0.2);
 }
 
 main .content-name .top{
@@ -271,15 +307,33 @@ main .content-name .bottom .subcategory-button span{
 
 main .content .path{
     display: none; /*flex*/
+    align-items: center;
     background-color: #222;
     color: #ccc;
     margin-top: 10px;
-    margin-right: 20px;
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 5px 10px; 
+    font-size: 15px;
     letter-spacing: 0.5px;
     word-spacing: 0.5px;
     border-radius: 10px;
+    box-shadow: 1px 3px 10px rgba(0,0,0,0.2);
+}
+
+main .content .path .category-link{
+    padding: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+main .content .path i{
+    padding-top: 2px;
+    margin: 0 5px;
+}
+
+main .content .path .category-link:hover{
+    background-color: #333;
+    color: white;
 }
 
 /* Рецепти */
@@ -288,8 +342,7 @@ main .recipes{
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    margin: 20px;
-    width: calc(66% - 10px);
+    margin: 20px 0;
 }
 
 main .recipes .item {
@@ -304,11 +357,13 @@ main .recipes .item {
     letter-spacing: 0.5px;
     word-spacing: 0.5px;
     line-height: 20px;
-    transition: all 0.3s ease;
+    box-shadow: 1px 3px 10px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 main .recipes .item:hover{
-    box-shadow: 1px 3px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 1px 3px 10px rgba(0, 0, 0, 0.3);
+    transform: scale(1.02);
 }
 
 main .recipes .item img{
@@ -334,6 +389,7 @@ main .recipes .item .category{
 
 main .recipes .item .stars{
     display: flex;
+    align-items: center;
     justify-content: center;
 }
 
@@ -354,12 +410,6 @@ main .recipes .item .description{
     padding: 10px 15px;
     font-size: 15px;
     overflow: hidden;
-}
-
-main .recipes .item .name, main .item .stars, main .item .description{
-    border: 1px solid #222;
-    border-top: none;
-    border-bottom: none;
 }
 
 main .recipes .item .footer{
@@ -394,5 +444,11 @@ main .recipes .item .footer div{
     header .bottom .main-categories button {
         padding: 5px 10px;
         font-size: 17px;
+    }
+}
+
+@media screen and (width < 800px) {
+    main .recipes .item{
+        flex-basis: 100%;
     }
 }
