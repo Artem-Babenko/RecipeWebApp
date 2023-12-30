@@ -26,14 +26,24 @@ public class User
     public string? Surname { get; set; }
 
     /// <summary>
-    /// Логін користувача.
+    /// Пошта користвача користувача.
     /// </summary>
-    public string? Login { get; set; }
+    public string? Email { get; set; }
 
     /// <summary>
     /// Пароль користувача.
     /// </summary>
     public string? Password { get; set; }
+
+    /// <summary>
+    /// Вік користувача.
+    /// </summary>
+    public int? Age { get; set; }
+
+    /// <summary>
+    /// Стать користувача.
+    /// </summary>
+    public string? Gender { get; set; }
 
     /// <summary>
     /// Список рецептів, створених користувачем.

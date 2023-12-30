@@ -100,7 +100,7 @@ public class RecipeDbContext : DbContext
         // Користувачі.
         List<User> users = new List<User>()
         {
-            new User() {Id = 1, Name = "Артем", Surname = "Бабенко", Login = "artem123", Password = "12345678"}
+            new User() {Id = 1, Name = "Артем", Surname = "Бабенко", Email = "babenkoartem505@gmail.com", Password = "12345678"}
         };
 
         // Категорії рецептів.
