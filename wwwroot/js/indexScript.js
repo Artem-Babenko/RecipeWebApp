@@ -1,4 +1,7 @@
 
+let allCategories;
+let recipesOnPage;
+
 /** Встановлення рецептів на головній сторінці. Також відбувається пошук рецептів, відповідно до категорії. */
 async function setRecipes(categoryId) {
     let recipes;
@@ -12,7 +15,9 @@ async function setRecipes(categoryId) {
         const result = await response.json();
         // Встановлення інформації про категорію рецептів.
         setContentName(result.category, result.recipes.length);
+        setPathToCategory(result.category);
         recipes = result.recipes;
+        recipesOnPage = recipes;
     }
     else {
         // Виведення всіх цепептів.
@@ -21,13 +26,118 @@ async function setRecipes(categoryId) {
             headers: { "Accept": "application/json" }
         });
 
+        // Приховування панелей інформації.
+        document.querySelector('.content-name').style.display = "none";
+        document.querySelector('.content .path').style.display = "none";
+
         recipes = await response.json();
+        recipesOnPage = recipes;
     }
+
+    // Прибирання клавіш сортування при завантажені рецептів з серверу.
+    document.querySelectorAll('.sortbar .sort-btn').forEach(sortbtn => {
+        sortbtn.classList.remove('active');
+        sortbtn.classList.remove('from-top');
+        sortbtn.classList.remove('from-bottom');
+        sortbtn.querySelector('i').classList.remove('fa-caret-down');
+        sortbtn.querySelector('i').classList.remove('fa-caret-up');
+    });
 
     const main = document.querySelector('main .recipes');
     main.textContent = "";
     // На основі кожного рецепту створити контейнер з його короткою інформацією.
     recipes.forEach(recipe => main.append(recipeItem(recipe)));
+}
+
+/** Виведення рецептів відносно налаштувань сорт бару. */
+function showSortedRecipes(sortMethod, sortDirection) {
+    // Сортування.
+    const sortedRecipes = recipesOnPage;
+    if (sortMethod && sortDirection) {
+        switch (sortMethod) {
+            case 'датою':
+                sortedRecipes.sort((a, b) => {
+                    return sortDirection === 'from-bottom' ? a.createDate - b.createDate : b.createDate - a.createDate;
+                });
+                break;
+            case 'популярністю':
+                sortedRecipes.sort((a, b) => {
+                    return sortDirection === 'from-bottom' ? a.views - b.views : b.views - a.views;
+                });
+                break;
+            case 'коментарями':
+                sortedRecipes.sort((a, b) => {
+                    return sortDirection === 'from-bottom' ? a.comments.length - b.comments.length : b.comments.length - a.comments.length;
+                });
+                break;
+            case 'рейтингом':
+                sortedRecipes.sort((a, b) => {
+                    return sortDirection === 'from-bottom' ? a.rating - b.rating : b.rating - a.rating;
+                });
+                break;
+        }
+    }
+
+    const main = document.querySelector('main .recipes');
+    main.textContent = "";
+    // На основі кожного рецепту створити контейнер з його короткою інформацією.
+    sortedRecipes.forEach(recipe => main.append(recipeItem(recipe)));
+}
+
+/** Обробник сортбару. */
+function sortBar() {
+    const sortbar = document.querySelector('.sortbar');
+    const sortButtons = sortbar.querySelectorAll('.sort-btn');
+
+    // Для кожної клавіши сортування.
+    sortButtons.forEach(button => {
+        const icon = document.createElement('i');
+        icon.classList.add('fa-solid');
+        button.appendChild(icon);
+
+        const sortBy = button.textContent.split('<')[0].trim().toLowerCase();
+
+        // Якщо відбудеть клік по клавіші сортування.
+        button.addEventListener('click', () => {
+
+            // Якщо клавіша сортує з верху у них.
+            if (button.classList.contains('from-top')) {
+                // Встановлюєм сортування з низу у верх.
+                button.classList.remove('from-top');
+                button.classList.add('from-bottom');
+                icon.classList.remove('fa-caret-down');
+                icon.classList.add('fa-caret-up');
+                showSortedRecipes(sortBy, 'from-bottom');
+            }
+            // Якщо клавіша сортує з низу у верх.
+            else if (button.classList.contains('from-bottom')) {
+                // Встановлюєм сортування з верху у низ.
+                button.classList.remove('from-bottom')
+                button.classList.add('from-top');
+                icon.classList.remove('fa-caret-up');
+                icon.classList.add('fa-caret-down');
+                showSortedRecipes(sortBy, 'from-top');
+            }
+            // Якщо це перше натиснення на клавішу.
+            else {
+                // Прибираєм натиснення з інших клавіш.
+                sortButtons.forEach(sortbtn => {
+                    sortbtn.classList.remove('active');
+                    sortbtn.classList.remove('from-top');
+                    sortbtn.classList.remove('from-bottom');
+                    sortbtn.querySelector('i').classList.remove('fa-caret-down');
+                    sortbtn.querySelector('i').classList.remove('fa-caret-up');
+                });
+
+                // Встановлюєм активність та сортування з верху у них.
+                button.classList.add('active');
+                button.classList.add('from-top');
+                icon.classList.remove('fa-caret-up');
+                icon.classList.add('fa-caret-down');
+                showSortedRecipes(sortBy, 'from-top');
+            }
+        });
+    });
 }
 
 
@@ -36,57 +146,58 @@ function recipeItem(recipe) {
     const item = document.createElement('div');
     item.classList.add("item");
 
-    // Картинка
+    // Картинка.
     const img = document.createElement('img');
     img.src = "photos/" + recipe.photoName;
     item.append(img);
 
-    // Назва
+    // Назва.
     const name = document.createElement('div');
     name.classList.add("name");
     name.append(recipe.name);
     item.append(name);
 
-    // Категорія
+    // Категорія.
     const category = document.createElement('div');
     category.classList.add('category');
     category.textContent = recipe.category.name;
     item.appendChild(category);
 
-    // Створення блоку для зірок
+    // Створення блоку для зірок.
     const stars = document.createElement('div');
     stars.classList.add('stars');
 
-    // Визначення кількості повних, напів-зірок та порожніх зірок на основі рейтингу
-    let ratingData = recipe.rating;
+    // Визначення кількості повних, напів-зірок та порожніх зірок на основі рейтингу.
+    const totalRatingSum = recipe.comments.reduce((sum, comment) => sum + comment.rating, 0);
+    let ratingData = totalRatingSum / recipe.comments.length;
     const fullStars = Math.floor(ratingData);
     const hasHalfStar = ratingData % 1 !== 0;
-
-    // Створення зірок відповідно до рейтингу
+    
+    // Створення зірок відповідно до рейтингу.
     for (let i = 1; i <= 5; i++) {
         const starIcon = document.createElement('i');
         starIcon.classList.add('fa-star', i <= fullStars ? 'fa-solid' : 'fa-regular');
 
-        // Додавання напів-зірки, якщо вона присутня
+        // Додавання напів-зірки, якщо вона присутня.
         if (hasHalfStar && i === Math.ceil(ratingData)) {
             starIcon.classList.remove('fa-star', 'fa-regular');
             starIcon.classList.add('fa-star-half-stroke', 'fa-solid');
         }
 
-        // Додавання зірки до блоку
+        // Додавання зірки до блоку.
         stars.appendChild(starIcon);
     }
 
-    // Створення блоку для відображення рейтингу
+    // Створення блоку для відображення рейтингу.
     const rating = document.createElement('div');
     rating.classList.add('rating');
-    rating.append(ratingData);
+    rating.textContent = ratingData ? ratingData.toFixed(1) : 0;
     stars.append(rating);
 
-    // Додавання блоку зірок до основного елементу
+    // Додавання блоку зірок до основного елементу.
     item.append(stars);
 
-    // Короткий опис
+    // Короткий опис.
     const maxWords = 25;
 
     const descriptionText = recipe.description;
@@ -94,11 +205,11 @@ function recipeItem(recipe) {
     const truncatedWords = words.slice(0, maxWords);
     const truncatedDescription = truncatedWords.join(' ');
 
-    // Перевірка, чи останнє слово не є крапкою
+    // Перевірка, чи останнє слово не є крапкою.
     const lastWord = truncatedWords[truncatedWords.length - 1];
     const endsWithPeriod = /\.$/.test(lastWord);
 
-    // Додавання три крапки, якщо останнє слово не є крапкою
+    // Додавання три крапки, якщо останнє слово не є крапкою.
     const finalDescription = endsWithPeriod ? truncatedDescription : truncatedDescription + '...';
 
     const description = document.createElement('div');
@@ -106,21 +217,21 @@ function recipeItem(recipe) {
     description.textContent = finalDescription;
     item.append(description);
 
-    // Колонтитул (низ)
+    // Колонтитул (низ).
     const footer = document.createElement('div');
     footer.classList.add('footer');
 
-    // Перегляди
+    // Перегляди.
     const views = document.createElement('div');
     views.innerHTML = `<i class="fa-regular fa-eye"></i> ${recipe.views}`
     footer.appendChild(views);
 
-    // Коментарі
+    // Коментарі.
     const comments = document.createElement('div');
     comments.innerHTML = `<i class="fa-regular fa-comments"></i> ${recipe.comments.length}`
     footer.appendChild(comments);
 
-    // Час приготування
+    // Час приготування.
     const timeSpanElement = document.createElement('div');
     const timeSpan = formatTime(recipe.cookingTime);
     timeSpanElement.innerHTML = `<i class="fa-regular fa-clock"></i> ${timeSpan}`
@@ -128,7 +239,7 @@ function recipeItem(recipe) {
 
     item.appendChild(footer);
 
-    // Івенти
+    // Івенти.
     item.addEventListener('click', () => {
         window.location.href = `/recipe?id=${recipe.id}`;
     });
@@ -153,6 +264,10 @@ async function setMainCategories() {
         categories.forEach(category => {
             const button = document.createElement('button');
             button.textContent = category.name;
+            button.addEventListener('click', (event) => {
+                event.preventDefault();
+                setRecipes(category.id);
+            })
             mainCategoriesContainer.appendChild(button);
         });
     }
@@ -185,6 +300,8 @@ async function setCategories() {
 
     if (response.ok) {
         const categories = await response.json();
+        allCategories = categories;
+
         const mainCategories = categories.filter(category => category.parentCategoryId === null);
         // Створення списку категорії.
         renderCategories(mainCategories, categories);
@@ -232,6 +349,60 @@ function setContentName(category, recipesCount) {
     }
 }
 
+
+/** Встановлення шляху по категоріям. */
+function setPathToCategory(category) {
+    // Початково додаємо ім'я поточної категорії до шляху
+    const path = [category.name];
+
+    findPathToRoot(category);
+
+    // Рекурсивно визначає шлях до кореневої категорії.
+    function findPathToRoot(currentCategory) {
+        const parentCategory = allCategories.find(c => c.id === currentCategory.parentCategoryId);
+
+        // Якщо я батьківська то: 
+        if (parentCategory) {
+            // Додає ім'я батьківської категорії до початку шляху.
+            path.unshift(parentCategory.name); 
+            // Рекурсивний виклик для батьківської категорії.
+            findPathToRoot(parentCategory); 
+        }
+    }
+
+    // Знаходження та відображення елемента ці шляхом.
+    const pathContainer = document.querySelector('.content .path');
+    pathContainer.style.display = 'flex';
+    pathContainer.textContent = '';
+
+    // Клавіша "Головна"
+    const mainSpan = document.createElement('span');
+    mainSpan.classList.add('category-link');
+    mainSpan.innerHTML = 'Головна';
+    // Евент-клік на перезавантаження сторінки.
+    mainSpan.addEventListener('click', () => setRecipes());
+
+    pathContainer.append(mainSpan);
+
+    // Для кожної назви категорії.
+    path.forEach(word => {
+        // Елемент-назва категорії.
+        const span = document.createElement('span');
+        span.classList.add('category-link');
+        span.innerHTML = word;
+        span.addEventListener('click', (event) => {
+            event.preventDefault();
+            setRecipes(allCategories.find(c => c.name === word).id);
+        });
+
+        // Символ стрілки.
+        const arrowIcon = document.createElement('i');
+        arrowIcon.classList.add('fa-solid', 'fa-angle-right');
+
+        pathContainer.append(arrowIcon);
+        pathContainer.append(span);
+    });
+}
 
 /** Створення категорій. */
 function renderCategories(mainCategories, allCategories) {
@@ -294,7 +465,70 @@ function renderCategories(mainCategories, allCategories) {
     }
 }
 
+/** Встановлення користувача на клавішу профілю. */
+function setUser() {
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    const userInfoElement = document.querySelector('.user-info');
+    const userNameEncoded = getCookie('UserName');
+    const userSurnameEncoded = getCookie('UserSurname');
+
+    if (userNameEncoded && userSurnameEncoded) {
+        const userName = decodeURIComponent(userNameEncoded);
+        const userSurname = decodeURIComponent(userSurnameEncoded);
+
+        userInfoElement.innerHTML = `<i class="fa-regular fa-user"></i> ${userName} ${userSurname}`;
+        userInfoElement.href = '/profile'
+    } else {
+        userInfoElement.innerHTML = '<i class="fa-regular fa-user"></i> Увійти';
+        userInfoElement.href = '/login'
+    }
+}
+
+/** Обробник пошуку. */
+function searchHandler() {
+    const searchInput = document.getElementById('search');
+
+    searchInput.addEventListener('input', () => {
+        const searchTerm = searchInput.value.toLowerCase();
+
+        // Фільтрація рецептів за введеним користувачем текстом.
+        const filteredRecipes = recipesOnPage.filter(recipe => {
+            // Порівняння з назвою, описом, складністю, інгредієнтами та іншими властивостями рецепту.
+            return (
+                recipe.name.toLowerCase().includes(searchTerm) ||
+                recipe.description.toLowerCase().includes(searchTerm) ||
+                recipe.difficulty.toLowerCase().includes(searchTerm) ||
+                recipe.ingredients.some(ingredient => ingredient.name.toLowerCase().includes(searchTerm)) ||
+                recipe.cookingSteps.some(cookingStep => cookingStep.title.toLowerCase().includes(searchTerm))
+            );
+        });
+
+        // Прибирання клавіш сортування при завантажені рецептів з серверу.
+        document.querySelectorAll('.sortbar .sort-btn').forEach(sortbtn => {
+            sortbtn.classList.remove('active');
+            sortbtn.classList.remove('from-top');
+            sortbtn.classList.remove('from-bottom');
+            sortbtn.querySelector('i').classList.remove('fa-caret-down');
+            sortbtn.querySelector('i').classList.remove('fa-caret-up');
+        });
+
+        // Встановлення відфільтрованих рецептів на сторінці.
+        const main = document.querySelector('main .recipes');
+        main.textContent = "";
+        filteredRecipes.forEach(recipe => main.append(recipeItem(recipe)));
+    });
+}
+
 
 setRecipes();
 setMainCategories();
 setCategories();
+setUser();
+sortBar();
+searchHandler();

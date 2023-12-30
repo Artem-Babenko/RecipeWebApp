@@ -9,8 +9,10 @@ const stepList = document.querySelector('.step-list');
 const viewsSpan = document.querySelector('.create-comment h2 span');
 const commentsList = document.querySelector('.comments');
 const footer = document.querySelector('footer');
+let recipeId;
 
 setInfo();
+setUser();
 
 /** Головна функція встановлення всієї інформації про рецепт. */
 async function setInfo() {
@@ -20,12 +22,13 @@ async function setInfo() {
     const id = searchParams.get('id');
 
     // Запит на сервер
-    const response = await fetch(`/recipe/${id}`, {
+    const response = await fetch(`/recipes/${id}`, {
         method: "GET",
         headers: { "Accept": "application/json" }
     });
 
     const recipe = await response.json();
+    recipeId = recipe.id;
 
     // Встановлення даних на сторінку.
     recipeName.textContent = recipe.name;
@@ -52,6 +55,26 @@ async function setInfo() {
 };
 
 
+/** Встановлення користувача для написання коментаря. */
+function setUser() {
+
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    
+    const userNameEncoded = getCookie('UserName');
+    const userSurnameEncoded = getCookie('UserSurname');
+
+    if (userNameEncoded && userSurnameEncoded) {
+        const userName = decodeURIComponent(userNameEncoded);
+        const userSurname = decodeURIComponent(userSurnameEncoded);
+
+        document.getElementById('userName').value = `${userName} ${userSurname}`;
+    }
+}
+
 /** Формування tboby для таблиці даних. */
 function dataTBody(recipe) {
     const tbody = document.createElement('tbody');
@@ -67,11 +90,9 @@ function dataTBody(recipe) {
     // Рейтинг.
     const rating = document.createElement('td');
     rating.classList.add("rating");
+
     // Визначення кількості повних, напів-зірок та порожніх зірок на основі рейтингу
-
-
     const totalRatingSum = recipe.comments.reduce((sum, comment) => sum + comment.rating, 0);
-
     let ratingData = totalRatingSum / recipe.comments.length;
     const fullStars = Math.floor(ratingData);
     const hasHalfStar = ratingData % 1 !== 0;
@@ -93,7 +114,7 @@ function dataTBody(recipe) {
 
     // Створення блоку для відображення рейтингу
     const ratingNum = document.createElement('span');
-    ratingNum.textContent = ratingData;
+    ratingNum.textContent = ratingData ? ratingData.toFixed(1) : 0;
     rating.append(ratingNum);
     tr.appendChild(rating);
 
@@ -258,6 +279,7 @@ function rateRecipe(event) {
     }
 }
 
+/** Функція перетворення дати з DateTime C#. */
 function formatCSharpDate(csharpDate) {
     // Перетворення рядка на об'єкт Date
     var date = new Date(csharpDate);
@@ -276,3 +298,34 @@ function formatCSharpDate(csharpDate) {
 
     return formattedDate;
 }
+
+/** Відправлення коментаря на сервер. */
+async function sendComment() {
+    const creatorName = document.getElementById('userName');
+    if (creatorName.length < 4) return;
+
+    const commentText = document.getElementById('comment');
+    if (commentText.length < 4) return;
+
+    const rating = document.querySelector('#recipeRating span');
+    if (rating.textContent == '') return;
+
+    const response = await fetch(`/recipe/comment/${recipeId}`, {
+        method: "POST",
+        headers: { "Accept": "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify({
+            userName: creatorName.value,
+            title: commentText.value,
+            rating: rating.textContent
+        })
+    });
+
+    if (response.ok) {
+        const comment = await response.json();
+        commentsList.appendChild(commentRow(comment));
+        commentText.value = '';
+        rating.value = '';
+    }
+}
+
+document.querySelector('.create-comment button').addEventListener('click', () => sendComment());
