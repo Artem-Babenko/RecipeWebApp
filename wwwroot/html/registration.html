@@ -1,10 +1,49 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/loginstyle.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>Реєстрація</title>
 </head>
 <body>
 
+    <header>
+        Рецепти приготування страв
+    </header>
+
+    <div class="container">
+        <h2>Реєстрація</h2>
+        <div class="form">
+            <p>
+                <label>Ім'я:</label><br />
+                <input type="text" id="name" oninput="this.style.outline = 'none';" />
+            </p>
+            <p>
+                <label>Прізвище:</label><br />
+                <input type="text" id="surname" oninput="this.style.outline = 'none';" />
+            </p>
+            <p>
+                <label>Електронна пошта:</label><br />
+                <input type="email" id="email" oninput="this.style.outline = 'none';" />
+            </p>
+            <p>
+                <label>Пароль:</label><br />
+                <input type="password" id="password1" oninput="this.style.outline = 'none';" />
+            </p>
+            <p>
+                <label>Підтвердіть пароль:</label><br />
+                <input type="password" id="password2" oninput="this.style.outline = 'none';" />
+            </p>
+            <div id="error">Невведена пошта та пароль</div>
+            <p>
+                Маєш акаунт?
+                <a href="/login">Входь!</a>
+            </p>
+            <button id="registrationButton">Зареєструватись</button>
+        </div>
+    </div>
+    <script src="/js/registrationScript.js"></script>
 </body>
 </html>
