@@ -18,12 +18,12 @@
         <div class="name"></div>
         <i class="fa-regular fa-heart"></i>
     </div>
- 
+
     <!-- Фото страви -->
     <img src="" alt="Фото страви" />
 
     <!-- Таблиця даних -->
-    <table>
+    <table class="data-table">
         <thead>
             <tr>
                 <th>Автор</th>
@@ -47,6 +47,85 @@
         <!-- Контент з Js -->
     </div>
 
+    <!-- Калорійність -->
+    <h2 class="calories-label">
+        Харчова цінність
+        <span>на 100 г</span>
+    </h2>
+    <div class="calories-panel">
+        <!-- Діаграма -->
+        <figure class="diagram">
+            <svg width="100%" height="100%" viewBox="0 0 36 36" class="donut" version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                <circle class="donut-hole" cx="18" cy="18" r="15.91549430918954" fill="#fff"></circle>
+                <circle class="donut-segment" cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#d62828" stroke-width="3" stroke-dasharray="36.500408830744 63.499591169256" stroke-dashoffset="100"></circle>
+                <circle class="donut-segment" cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#2a9d8f" stroke-width="3" stroke-dasharray="2.7244480784955 97.275551921505" stroke-dashoffset="63.499591169256"></circle>
+                <circle class="donut-segment" cx="18" cy="18" r="15.91549430918954" fill="transparent" stroke="#fcbf49" stroke-width="3" stroke-dasharray="60.77514309076 39.22485690924" stroke-dashoffset="60.77514309076"></circle>
+            </svg>
+            <figcaption class="diagram-caption">
+                <p class="diagram-text">
+                    Калорії
+                    <span class="calories">255</span>
+                    Кал, ккал
+                </p>
+            </figcaption>
+        </figure>
+
+        <!-- Легенда діаграми -->
+        <div class="list">
+            <p id="proteinsFor100g">Білки - 22.32г (36.5%)</p>
+            <div class="slider-bar">
+                <div class="slider" id="proteinSlider" style="width: 36%; background-color: #d62828;"></div>
+            </div>
+            <p id="carbohydratesFor100g">Вуглеводи - 37.87г (60.78%)</p>
+            <div class="slider-bar">
+                <div class="slider" id="carbohydrateSlider" style="width: 60%; background-color: #2a9d8f; "></div>
+            </div>
+            <p id="fatsFor100g">Жири - 2.67г (2.7%)</p>
+            <div class="slider-bar">
+                <div class="slider" id="fatsSlider" style="width: 3%; background-color: #fcbf49; "></div>
+            </div>
+            <div class="hint">Для перегляду докладної таблиці харчової цінності натисність на діаграму.</div>
+        </div>
+    </div>
+
+    <!-- Таблиця харчової цінності -->
+    <table class="calories-table">
+        <thead>
+            <tr>
+                <th>Продукт</th>
+                <th>Міра</th>
+                <th>Вага, гр</th>
+                <th>Біл, гр</th>
+                <th>Вуг, гр</th>
+                <th>Жир, гр</th>
+                <th>Кал, ккал</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>Разом</td>
+                <td></td>
+                <td id="totalWeigth"></td>
+                <td id="totalProteins"></td>
+                <td id="totalCarbohydogates"></td>
+                <td id="totalFats"></td>
+                <td id="totalCalories"></td>
+            </tr>
+            <tr>
+                <td>На 100 грам</td>
+                <td></td>
+                <td>100</td>
+                <td id="proteinsPer100g"></td>
+                <td id="carbohydratesPer100g"></td>
+                <td id="fatsPer100gElement"></td>
+                <td id="caloriesPer100g"></td>
+            </tr>
+        </tfoot>
+    </table>
+
     <!-- Список кроків приготування -->
     <div class="step-list">
         <h2>Як приготувати?</h2>
@@ -60,7 +139,7 @@
             <span></span>
         </h2>
 
-        <input type="text" id="userName" placeholder="Ваше ім'я" required/>
+        <input type="text" id="userName" placeholder="Ваше ім'я" required />
         <br />
 
         <textarea id="comment" placeholder="Коментар" rows="4" required></textarea>
