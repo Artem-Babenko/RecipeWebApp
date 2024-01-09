@@ -76,33 +76,35 @@ img{
 
 /* Таблиця з даними */
 
-table{
+table.data-table{
     width: 100%;
     padding: 20px 20px 10px;
+    letter-spacing: 0.5px;
+    word-spacing: 0.5px;
 }
 
-table th{
+table.data-table th{
     font-weight: 500;
 }
 
-table td{
+table.data-table td{
     text-align: center;
     color: #333;
     padding: 4px;
 }
 
-table .rating{
+table.data-table .rating{
     color: #BC4749;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-table .rating i{
+table.data-table .rating i{
     padding: 0 1px;
 }
 
-table .rating span {
+table.data-table .rating span {
     color: #333;
     padding-left: 5px;
 }
@@ -150,7 +152,168 @@ table .rating span {
 
 
 .ingredient-list .row div{
+    font-size: 16px; 
+}
+
+/* Калорійність */
+
+h2.calories-label{
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding-left: 70px;
+    position: relative;
+}
+
+h2.calories-label span{
+    color: #ccc;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.calories-panel {
+    display: flex;
+    padding: 0 80px;
+    align-items: center;
+    gap: 25px;
+    padding-top: 15px;
+    letter-spacing: 0.5px;
+    word-spacing: 0.5px;
+    position: relative;
+}
+
+.calories-panel .diagram{
+    position: relative;
+    width: 20%;
+}
+
+.calories-panel .diagram .diagram-caption{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 65%;
+}
+
+.calories-panel .diagram .diagram-caption p{
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     font-size: 16px;
+}
+
+.calories-panel .diagram .diagram-caption p span{
+    color: #dd2528;
+    font-size: 24px; 
+    font-weight: 700;
+}
+
+.calories-panel .list{
+    width: calc(100% - 100px);
+}
+
+.calories-panel .list .slider-bar{
+    display: flex;
+    background-color: #e4e4e4;
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 4px;
+    margin-bottom: 12px;
+}
+
+.calories-panel .list .slider-bar .slider{
+    border-radius: 10px;
+    height: 10px;
+}
+
+.calories-panel .hint{
+    font-size: 14px;
+    color: #999;
+    font-weight: 400;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: 0.5px;
+}
+
+/* Таблиця калоріїв */
+
+.calories-table{
+    border-collapse: collapse;
+    width: calc(100% - 100px);
+    margin: 0 50px;
+    margin-top: 30px;
+}
+
+.calories-table th{
+    background-color: #BC4749;
+    color: white;
+    padding: 5px;
+    border-right: 2px dotted white;
+}
+
+.calories-table th:first-of-type{
+    border-radius: 10px 0 0 0;
+}
+
+.calories-table th:last-of-type{
+    border-radius: 0 10px 0 0;
+    border: none;
+}
+
+.calories-table tbody tr{
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.calories-table tbody tr:nth-child(even) {
+    background-color: #f6f6f6; 
+}
+
+.calories-table td {
+    text-align: center;
+    border-right: 1px dashed #ededed;
+    border-left: 1px dashed #ededed;
+    padding: 5px;
+}
+
+.calories-table tr td:first-of-type{
+    border-left: none;
+}
+
+.calories-table tr td:last-of-type{
+    border-right: none;
+}
+
+.calories-table tfoot tr{
+    background-color: #222;
+    color: white;
+    font-weight: 500;
+    border-bottom: 1px solid #555;
+}
+
+.calories-table tfoot td{
+    border-right: 1px dashed #444;
+    border-left: 1px dashed #444;
+}
+
+.calories-table tfoot tr:last-of-type{
+    border: none;
+}
+
+.calories-table tfoot tr:last-of-type td:first-of-type{
+    border-radius: 0 0 0 10px;
+}
+
+.calories-table tfoot tr td:first-of-type{
+    text-align: end;
+}
+
+.calories-table tfoot tr:last-of-type td:last-of-type{
+    border-radius: 0 0 10px ;
 }
 
 /* Список кроків */
