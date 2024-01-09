@@ -8,13 +8,17 @@ using System.Security.Claims;
 
 namespace RecipeWebApp.Controllers;
 
+/// <summary>
+/// Контролер, який відповідає за обробку запитів, пов'язаних із користувачами.
+/// </summary>
 public class UserController : Controller
 {
     RecipeDbContext db;
     public UserController(RecipeDbContext db) => this.db = db;
 
     /// <summary>
-    /// Отримує дані користувача для входу та створює аутентифікаційну куку.
+    /// Обробляє HTTP POST-запит надсилання даних користувача для входу. 
+    /// Створення аутентифікаційних кук для користувача.
     /// </summary>
     [HttpPost]
     [Route("/user/login")]
@@ -48,9 +52,9 @@ public class UserController : Controller
         return Ok();
     }
 
-
     /// <summary>
-    /// Видаляє аутентифікаційні куки та повернення на головну сторінку.
+    /// Обробляє HTTP GET-запит для видалення аутентифікаційних кук. 
+    /// Перехід на головну сторінку.
     /// </summary>
     [HttpGet]
     [Authorize]
@@ -64,7 +68,8 @@ public class UserController : Controller
     }
 
     /// <summary>
-    /// Отримує реєстраційні дані, додає користуча до бази даних та створює аутентифікаційну куку.
+    /// Обробляє HTTP POST-запит для надсилання реєстраційних даних користувача. 
+    /// Додає користувача до бази даних та створює аутентифікаційні куки.
     /// </summary>
     [HttpPost]
     [Route("/user/registration")]
@@ -98,7 +103,7 @@ public class UserController : Controller
     }
 
     /// <summary>
-    /// Надсилає поточного користувача та його всі дані.
+    /// Обробляє HTTP GET-запит для отримання поточного користувача з його усіма даними.
     /// </summary>
     [HttpGet]
     [Authorize]
@@ -143,7 +148,7 @@ public class UserController : Controller
     }
 
     /// <summary>
-    /// Отримує нові дані користувача та встановлює їх у базі даних.
+    /// Обробляє HTTP PUT-запит для надсилання нових даних користувача.
     /// </summary>
     [HttpPut]
     [Route("/user")]

@@ -2,10 +2,13 @@
 
 namespace RecipeWebApp.Controllers;
 
+/// <summary>
+/// Контролер, який відповідає за надсилання сторінок.
+/// </summary>
 public class PageController : Controller
 {
     /// <summary>
-    /// Надсилає головну сторінку.
+    /// Обробляє HTTP GET-запит для отримання головної сторінки.
     /// </summary>
     [HttpGet]
     [Route("/")]
@@ -15,7 +18,7 @@ public class PageController : Controller
     }
 
     /// <summary>
-    /// Надсилає сторінку рецепту.
+    /// Обробляє HTTP GET-запит для отримання рецепта.
     /// </summary>
     [HttpGet]
     [Route("/recipe")]
@@ -25,7 +28,7 @@ public class PageController : Controller
     }
 
     /// <summary>
-    /// Надсилає сторінку входу.
+    /// Обробляє HTTP GET-запит для отримання сторінки входу.
     /// </summary>
     [HttpGet]
     [Route("/login")]
@@ -35,7 +38,7 @@ public class PageController : Controller
     }
 
     /// <summary>
-    /// Надсилає сторінку реєстрації.
+    /// Обробляє HTTP GET-запит для отримання сторінки реєстрації.
     /// </summary>
     [HttpGet]
     [Route("/registration")]
@@ -45,12 +48,22 @@ public class PageController : Controller
     }
 
     /// <summary>
-    /// Надсилає сторінку профілю.
+    /// Обробляє HTTP GET-запит для отримання сторінки профілю користувача.
     /// </summary>
     [HttpGet]
     [Route("/profile")]
     public IActionResult GetProfilePage()
     {
         return File("html/profile.html", "text/html; charset=utf-8;");
+    }
+
+    /// <summary>
+    /// Обробляє HTTP GET-запит для отримання сторінки створеня рецепту.
+    /// </summary>
+    [HttpGet]
+    [Route("/create")]
+    public IActionResult GetCreateRecipePage()
+    {
+        return File("html/create.html", "text/html; charset=utf-8;");
     }
 }
