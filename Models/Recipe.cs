@@ -31,11 +31,6 @@ public class Recipe
     public string? PhotoName { get; set; }
 
     /// <summary>
-    /// Рейтинг страви від 0.0 до 5.
-    /// </summary>
-    public float Rating { get; set; } = 0.0f;
-
-    /// <summary>
     /// Складність приготування завдання.
     /// </summary>
     public string? Difficulty { get; set; }

@@ -23,6 +23,11 @@ public class RecipeDbContext : DbContext
     public DbSet<Category> Categories { get; set; } = null!;
 
     /// <summary>
+    /// Список продуктів у базі даних.
+    /// </summary>
+    public DbSet<Product> Products { get; set; } = null!;
+
+    /// <summary>
     /// Список інгредієнтів у базі даних.
     /// </summary>
     public DbSet<Ingredient> Ingredients { get; set; } = null!;
@@ -36,6 +41,11 @@ public class RecipeDbContext : DbContext
     /// Список коментарів рецептів у базі даних.
     /// </summary>
     public DbSet<Comment> Comments { get; set; } = null!;
+
+    /// <summary>
+    /// Список тимчасовий фото у базі даних.
+    /// </summary>
+    public DbSet<TemporaryPhoto> TemporaryPhotos { get; set; } = null!;
 
 
     /// <summary>
@@ -69,6 +79,13 @@ public class RecipeDbContext : DbContext
             .HasOne(ingredient => ingredient.Recipe)
             .WithMany(recipe => recipe.Ingredients)
             .HasForeignKey(ingredient => ingredient.RecipeId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        // Встановлення зв'язку між багатьма Інгредієнтами (для рецептів) та одним Продуктом.
+        modelBuilder.Entity<Ingredient>()
+            .HasOne(rIngredient => rIngredient.Product)
+            .WithMany(ingredient => ingredient.Ingregients)
+            .HasForeignKey(rIngredient => rIngredient.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
 
         // Встановлення зв'язку між багатька Рецептами та одною Категорією.
@@ -161,17 +178,122 @@ public class RecipeDbContext : DbContext
             new Category() { Id = 32, Name = "Фруктові десерти", ParentCategoryId = 6 }
         };
 
-        // Інгредієнти для приготування рецепту.
+        // Список продуктів.
+        List<Product> products = new List<Product>()
+        {
+            new Product() { Id = 1,
+                Name = "Філе минтая",
+                Amount = 100,
+                Unit = "г",
+                Calories = 72,
+                Proteins = 16,
+                Carbohydrate = 0,
+                Fats = 1
+            },
+            new Product() { Id = 2,
+                Name = "Білий хліб",
+                Amount = 100,
+                Unit = "г",
+                Calories = 257,
+                Proteins = 7.7f,
+                Carbohydrate = 52,
+                Fats = 1
+            },
+            new Product() { Id = 3,
+                Name = "Молоко 2.5%",
+                Amount = 100,
+                Unit = "мл",
+                Calories = 51,
+                Proteins = 3,
+                Carbohydrate = 4.7f,
+                Fats = 2.5f
+            },
+            new Product() { Id = 4,
+                Name = "Яйце куряче",
+                Amount = 1,
+                Weight = 55,
+                Unit = "шт",
+                Calories = 83,
+                Proteins = 7,
+                Carbohydrate = 0.5f,
+                Fats = 6
+            },
+            new Product() { Id = 5,
+                Name = "Цибуля ріпчаста",
+                Amount = 1,
+                Weight = 70,
+                Unit = "шт",
+                Calories = 43,
+                Proteins = 1.5f,
+                Carbohydrate = 9,
+                Fats = 0.25f
+            },
+            new Product() { Id = 6,
+                Name = "Олія соняшникова",
+                Amount = 1,
+                Weight = 9.3f,
+                Unit = "ст. л.",
+                Calories = 90,
+                Proteins = 0.01f,
+                Carbohydrate = 0.01f,
+                Fats = 9.95f
+            },
+            new Product() { Id = 7, 
+                Name = "Сіль, чорний перець"
+            },
+            new Product() { Id = 8, 
+                Name = "Сухарі панірувальні", 
+                Amount = 10,
+                Unit = "г",
+                Calories = 24,
+                Proteins = 1,
+                Carbohydrate = 5,
+                Fats = 0.2f
+            },
+        };
+
+        // Cписок інгредієнтів.
         List<Ingredient> ingredients = new List<Ingredient>()
         {
-            new Ingredient() { Id = 1, Name = "Філе минтая", Amount = 500, Unit = "гр", RecipeId = 4 },
-            new Ingredient() { Id = 2, Name = "Білий хліб", Amount = 6, Unit = "шматочків", RecipeId = 4 },
-            new Ingredient() { Id = 3, Name = "Молоко", Amount = 100, Unit = "мл", RecipeId = 4 },
-            new Ingredient() { Id = 4, Name = "Яйце куряче", Amount = 1, Unit = "шт", RecipeId = 4 },
-            new Ingredient() { Id = 5, Name = "Цибуля ріпчаста", Amount = 1, Unit = "шт", RecipeId = 4 },
-            new Ingredient() { Id = 6, Name = "Олія соняшникова", Amount = 2, Unit = "ст. л.", RecipeId = 4 },
-            new Ingredient() { Id = 7, Name = "Сіль, чорний перець, кріп", RecipeId = 4 },
-            new Ingredient() { Id = 8, Name = "Сухарі панірувальні", RecipeId = 4 },
+            new Ingredient() { Id = 1, 
+                Amount = 500, 
+                ProductId = 1,
+                RecipeId = 4
+            },
+            new Ingredient() { Id = 2,
+                Amount = 100,
+                ProductId = 2,
+                RecipeId = 4
+            },
+            new Ingredient() { Id = 3,
+                Amount = 100,
+                ProductId = 3,
+                RecipeId = 4
+            },
+            new Ingredient() { Id = 4,
+                Amount = 1,
+                ProductId = 4,
+                RecipeId = 4
+            },
+            new Ingredient() { Id = 5,
+                Amount = 1,
+                ProductId = 5,
+                RecipeId = 4
+            },
+            new Ingredient() { Id = 6,
+                Amount = 2,
+                ProductId = 6,
+                RecipeId = 4
+            },
+            new Ingredient() { Id = 7,
+                Amount = 50,
+                ProductId = 8,
+                RecipeId = 4
+            },
+            new Ingredient() { Id = 8,
+                ProductId = 7,
+                RecipeId = 4
+            },
         };
 
         // Коментарі рецептів.
@@ -205,7 +327,6 @@ public class RecipeDbContext : DbContext
                 PhotoName = "pizza-cheese-tomatoes-olives.jpg",
                 Name = "Оливкова піца",
                 Description = "Оливка піца з сиром та томатним соусом - це прекрасна комбінація смаків та ароматів, яка задовольнить ваші гастрономічні бажання. Ця піца поєднує в собі солодкий смак томатного соусу, ароматний сир та інтенсивний смак оливок.\r\n\r\nПіца приготована на тонкому або товстому тісті, в залежності від вашого вибору. Тонке тісто надає піці легкість, тоді як товсте тісто робить її більш насиченою та ситною.\r\n\r\nНа тонкому або товстому коржі рівномірно розподілено томатний соус, який надає піці основний та смачний смак. Верхню частину покриває або ковбаса моцарелли, або комбінація сирів, таких як пармезан, чеддер або гауда.\r\n\r\nОсновна ідея полягає в тому, щоб нарізати оливки на тонкі кільця та рівномірно розподілити їх по всій піці. Це додає піці не тільки смак оливок, але й гарний зовнішній вигляд.\r\n\r\nПісля того, як піца випічена, на неї можна додати свіжі зелені, такі як базилік чи рукола, для додаткового аромату та свіжості.",
-                Rating = 4.7f,
                 Difficulty = "Нормально",
                 Views = 76,
                 CookingTime = TimeSpan.FromMinutes(40),
@@ -216,7 +337,6 @@ public class RecipeDbContext : DbContext
                 PhotoName = "chef-salad.jpg",
                 Name = "Шеф-салат",
                 Description = "Шеф-салат - це вишукана та смачна страва, яка зазвичай подається в ресторанах як підкреслення кулінарної майстерності шеф-кухаря. Одним із класичних варіантів є \"Цезар\", який являє собою комбінацію свіжих листків салату, курячого філе, гартованого яйця, гарячого бекону, пармезану та ароматного соусу.\r\n\r\nОсновні складники шеф-салату можуть варіюватися залежно від рецепту та кухні, але зазвичай вони включають в себе свіжі овочі, м'ясо або рибу, сир, гарнір та соус.",
-                Rating = 3.8f,
                 Difficulty = "Легко",
                 Views = 43,
                 CookingTime = TimeSpan.FromMinutes(25),
@@ -227,7 +347,6 @@ public class RecipeDbContext : DbContext
                 PhotoName = "chocolate-cake.jpg",
                 Name = "Шоколадний тортик з полуницями",
                 Description = "Шоколадний торт з полуницями - це чудовий десерт, який поєднує в собі солодкість шоколадного бісквіта з ароматом свіжих полуниць.",
-                Rating = 4.3f,
                 Difficulty = "Складно",
                 Views = 58,
                 CookingTime = TimeSpan.FromMinutes(80),
@@ -238,7 +357,6 @@ public class RecipeDbContext : DbContext
                 PhotoName = "rybni-kotlety.jpg",
                 Name = "Рибні котлети",
                 Description = "Рибні котлети – це ароматна, неймовірно смачна та дієтична страва. Вони на тривалий час насичують організм, ідеально поєднується з різноманітними гарнірами та соусами. Ніжні рибні котлети стануть чудовою альтернативою звичайній смаженій рибі.",
-                Rating = 4.5f,
                 Difficulty = "Нормально",
                 Views = 22,
                 CookingTime = TimeSpan.FromMinutes(60),
@@ -249,6 +367,7 @@ public class RecipeDbContext : DbContext
         // Занесення даних у базу даних.
         modelBuilder.Entity<User>().HasData(users);
         modelBuilder.Entity<Category>().HasData(categories);
+        modelBuilder.Entity<Product>().HasData(products);
         modelBuilder.Entity<Ingredient>().HasData(ingredients);
         modelBuilder.Entity<Comment>().HasData(comments);
         modelBuilder.Entity<CookingStep>().HasData(cookingSteps);
