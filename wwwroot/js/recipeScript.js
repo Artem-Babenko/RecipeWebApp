@@ -52,8 +52,9 @@ async function setInfo() {
 
     // Футер з датою створення.
     footer.textContent = `Рецепт доданий ${formatCSharpDate(recipe.createDate)}`;
-};
 
+    diagramInfo(recipe);
+};
 
 /** Встановлення користувача для написання коментаря. */
 function setUser() {
@@ -132,7 +133,6 @@ function dataTBody(recipe) {
     return tbody;
 }
 
-
 /** Функція перетворення часу. */
 function formatTime(time) {
     const [hours, minutes] = time.split(':');
@@ -150,7 +150,6 @@ function formatTime(time) {
     return result.trim(); // Видаляємо можливі пробіли в кінці
 }
 
-
 /** Поветає елемент-рядок списку інгредієнтів. */
 function ingredientRow(ingredient) {
     const row = document.createElement('div');
@@ -159,7 +158,7 @@ function ingredientRow(ingredient) {
     // Назва інгредієнту.
     const name = document.createElement('div');
     name.classList.add('ingredient-name');
-    name.textContent = ingredient.name;
+    name.textContent = ingredient.product.name;
     row.appendChild(name);
 
     // Кількість та одиниці вимірювання.
@@ -167,14 +166,13 @@ function ingredientRow(ingredient) {
     amount.classList.add('amount');
 
     const amountText = (ingredient.amount === 0) ? "" : ingredient.amount;
-    const unitText = (ingredient.unit === null) ? "" : ingredient.unit;
+    const unitText = (ingredient.product.unit === null) ? "" : ingredient.product.unit;
 
     amount.textContent = `${amountText} ${unitText}`;
     row.appendChild(amount);
 
     return row;
 }
-
 
 /** Повертає елемент-рядок для списку кроків приготування. */
 function stepRow(step) {
@@ -195,7 +193,6 @@ function stepRow(step) {
 
     return row;
 }
-
 
 /** Повертає елемент-рядок для списку коментарів. */
 function commentRow(comment) {
@@ -257,7 +254,6 @@ function commentRow(comment) {
     return container;
 }
 
-
 document.getElementById('recipeRating').addEventListener('click', rateRecipe);
 
 function rateRecipe(event) {
@@ -310,7 +306,7 @@ async function sendComment() {
     const rating = document.querySelector('#recipeRating span');
     if (rating.textContent == '') return;
 
-    const response = await fetch(`/recipe/comment/${recipeId}`, {
+    const response = await fetch(`/recipe/comments/${recipeId}`, {
         method: "POST",
         headers: { "Accept": "application/json", "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -329,3 +325,191 @@ async function sendComment() {
 }
 
 document.querySelector('.create-comment button').addEventListener('click', () => sendComment());
+
+/* Обробник діаграми та таблиці харчової цінності. */
+function diagramInfo(recipe) {
+
+    // Всі білки.
+    let proteinSum = 0;
+    for (const ingredient of recipe.ingredients) {
+        if (ingredient.amount == 0) break;
+        proteinSum += (ingredient.amount / ingredient.product.amount) * ingredient.product.proteins;
+    }
+    const totalProteins = proteinSum.toFixed(2);
+    console.log(`Кількість білків у страві: ${totalProteins} г`);
+
+    // Всі вуглеводи.
+    let carbohydrateSum = 0;
+    for (const ingredient of recipe.ingredients) {
+        if (ingredient.amount == 0) break;
+        carbohydrateSum += (ingredient.amount / ingredient.product.amount) * ingredient.product.carbohydrate;
+    }
+    const totalCarbohydrates = carbohydrateSum.toFixed(2);
+    console.log(`Кількість вуглеводів у страві: ${totalCarbohydrates} г`);
+
+    // Всі жири.
+    let fatsSum = 0;
+    for (const ingredient of recipe.ingredients) {
+        if (ingredient.amount == 0) break;
+        fatsSum += (ingredient.amount / ingredient.product.amount) * ingredient.product.fats;
+    }
+    const totalFats = fatsSum.toFixed(2);
+    console.log(`Кількість жирів у страві: ${totalFats} г`);
+
+    // Всі калорії.
+    let caloriesSum = 0;
+    for (const ingredient of recipe.ingredients) {
+        if (ingredient.amount == 0) break;
+        caloriesSum += (ingredient.amount / ingredient.product.amount) * ingredient.product.calories;
+    }
+    const totalCalories = caloriesSum.toFixed(0);
+    console.log(`Кількість калорій у страві: ${totalCalories} ккал`);
+
+    // Вага страви.
+    let totalWeight = 0;
+    for (const ingredient of recipe.ingredients) {
+        const weightInGrams = ingredient.product.weight ? ingredient.product.weight * ingredient.amount : ingredient.amount;
+        totalWeight += weightInGrams;
+    }
+    console.log(`Вага страви: ${totalWeight.toFixed(2)} г`);
+
+    // Калогій на 100 г.
+    const totalCaloriesPer100g = (totalCalories / totalWeight * 100).toFixed(0);
+    console.log(`Калорій на 100 г: ${totalCaloriesPer100g} ккал`);
+
+    // Білків на 100 г.
+    const totalProteinsPer100g = (totalProteins / totalWeight * 100).toFixed(2);
+    console.log(`Білків на 100 г: ${totalProteinsPer100g} г`);
+
+    // Вуглеводів на 100 г.
+    const totalCarbohydratesPer100g = (totalCarbohydrates / totalWeight * 100).toFixed(2);
+    console.log(`Вуглеводів на 100 г: ${totalCarbohydratesPer100g} г`);
+
+    // Жири на 100 г.
+    const totalFatsPer100g = (totalFats / totalWeight * 100).toFixed(2);
+    console.log(`Вуглеводів на 100 г: ${totalFatsPer100g} г`);
+
+    // Сума БЖВ
+    const bjvSum = parseFloat(totalCarbohydratesPer100g) + parseFloat(totalFatsPer100g) + parseFloat(totalProteinsPer100g);
+
+    // Отримайте елементи сегментів
+    const segments = document.querySelectorAll('.donut-segment');
+
+    // Задайте значення відсотків для кожного сегменту
+    const proteinPercentage = (parseFloat(totalProteinsPer100g) / bjvSum) * 100;
+    const carbsPercentage = (parseFloat(totalCarbohydratesPer100g) / bjvSum) * 100;
+    const fatPercentage = (parseFloat(totalFatsPer100g) / bjvSum) * 100;
+
+    // Встановлення даних на сторінку
+    const proteinsPer100gElement = document.getElementById('proteinsFor100g');
+    const carbohydratesPer100gElement = document.getElementById('carbohydratesFor100g');
+    const fatsPer100gElement = document.getElementById('fatsFor100g');
+    const caloriesElement = document.querySelector('.diagram-text span');
+
+    proteinsPer100gElement.textContent = `Білки - ${totalProteinsPer100g} г (${proteinPercentage.toFixed(2)} %)`;
+    carbohydratesPer100gElement.textContent = `Вуглеводи - ${totalCarbohydratesPer100g} г (${carbsPercentage.toFixed(2)} %)`;
+    fatsPer100gElement.textContent = `Жири - ${totalFatsPer100g} г (${fatPercentage.toFixed(2)} %)`;
+    caloriesElement.textContent = totalCaloriesPer100g;
+
+    // Встановлення даних слайдерів.
+    const proteinSlider = document.getElementById('proteinSlider');
+    const carbohydrateSlider = document.getElementById('carbohydrateSlider');
+    const fatsSlider = document.getElementById('fatsSlider');
+    proteinSlider.style.width = proteinPercentage + "%";
+    carbohydrateSlider.style.width = carbsPercentage + "%";
+    fatsSlider.style.width = fatPercentage + "%";
+
+    // Встановлення даних у таблицю.
+    const table = document.querySelector('.calories-table tbody');
+    recipe.ingredients.forEach(ingredient => table.append(productRow(ingredient.product, ingredient.amount)));
+
+    // Дані у таблиці "Разом"
+    document.getElementById('totalWeigth').textContent = formatNumber(totalWeight);
+    document.getElementById('totalProteins').textContent = formatNumber(totalProteins);
+    document.getElementById('totalCarbohydogates').textContent = formatNumber(totalCarbohydrates);
+    document.getElementById('totalFats').textContent = formatNumber(totalFats);
+    document.getElementById('totalCalories').textContent = formatNumber(totalCalories);
+
+    // Дані у таблиці "На 100 г"
+    document.getElementById('proteinsPer100g').textContent = formatNumber(totalProteinsPer100g);
+    document.getElementById('carbohydratesPer100g').textContent = formatNumber(totalCarbohydratesPer100g);
+    document.getElementById('fatsPer100gElement').textContent = formatNumber(totalFatsPer100g);
+    document.getElementById('caloriesPer100g').textContent = formatNumber(totalCaloriesPer100g);
+
+    // Функція для встановлення величини сегментів
+    function setSegmentSizes() {
+        let offset = 0;
+
+        segments.forEach((segment, index) => {
+            const percentage = (index === 0) ? proteinPercentage : (index === 1) ? carbsPercentage : fatPercentage;
+            const dasharray = `${percentage} ${100 - percentage}`;
+
+            segment.setAttribute('stroke-dasharray', dasharray);
+            segment.setAttribute('stroke-dashoffset', offset);
+
+            // Збільшуйте зміщення для кожного сегменту
+            offset -= percentage;
+        });
+    }
+
+    // Викликати функцію при завантаженні сторінки
+    setSegmentSizes();
+}
+
+/** Елемент-рядок таблиці харчової цінності. */
+function productRow(ingredient, amount) {
+    const tr = document.createElement('tr');
+
+    // Назва продукту.
+    const name = document.createElement('td');
+    name.textContent = ingredient.name;
+    tr.appendChild(name);
+
+    // Міра (кількість).
+    const amountCell = document.createElement('td');
+    amountCell.textContent = `${amount} ${ingredient.unit ?? ""}`;
+    tr.appendChild(amountCell);
+
+    // Вага.
+    const weight = document.createElement('td');
+    weight.textContent = formatNumber(ingredient.weight ? ingredient.weight * amount : amount) || 0;
+    tr.appendChild(weight);
+
+    // Білки.
+    const proteins = document.createElement('td');
+    proteins.textContent = formatNumber(ingredient.proteins * (amount / ingredient.amount)) || 0;
+    tr.appendChild(proteins);
+
+    // Вуглеводи.
+    const carbohydrates = document.createElement('td');
+    carbohydrates.textContent = formatNumber(ingredient.carbohydrate * (amount / ingredient.amount)) || 0;
+    tr.appendChild(carbohydrates);
+
+    // Жири.
+    const fats = document.createElement('td');
+    fats.textContent = formatNumber(ingredient.fats * (amount / ingredient.amount)) || 0;
+    tr.appendChild(fats);
+
+    // Калорії.
+    const calories = document.createElement('td');
+    calories.textContent = formatNumber(ingredient.calories * (amount / ingredient.amount)) || 0;
+    tr.appendChild(calories);
+
+    return tr;
+}
+
+/** Повертає число округлене до одного знака після коми. Якщо чисно не дробове то нулів після коми немає. */
+function formatNumber(value) {
+    if (isNaN(value)) {
+        // Виводимо порожній рядок замість "NaN".
+        return "";  
+    }
+
+    // Округлення до двох знаків після коми.
+    const roundedValue = Math.round(value * 10) / 10;  
+
+    // Перевіряємо, чи є дробова частина необхідною для виведення.
+    const formattedValue = roundedValue % 1 !== 0 ? roundedValue.toFixed(1) : String(Math.round(roundedValue));
+
+    return formattedValue;
+}

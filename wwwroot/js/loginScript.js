@@ -39,7 +39,7 @@ async function login() {
         });
 
         // якщо користувача Не знайдено
-        if (response.status === 404) {
+        if (response.status === 404 || response.status === 401) {
             emailInput.style.outline = "2px solid red";
             passwordInput.style.outline = "2px solid red";
             passwordInput.value = "";
@@ -57,8 +57,6 @@ async function login() {
 }
 
 document.getElementById("login").addEventListener("click", async () => login());
-
-
 
 document.getElementById("password").addEventListener('input', function () {
     this.style.outline = "none";

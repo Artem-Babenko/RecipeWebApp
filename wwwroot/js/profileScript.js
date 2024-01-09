@@ -23,7 +23,7 @@ async function getUser() {
     categories = result.categories;
     recipes = result.recipes;
     totalViews = result.totalViews;
-    averageRating = result.averageRating;
+    averageRating = result.averageRating.toFixed(2);
     totalComments = result.totalComments;
 }
 
@@ -43,8 +43,8 @@ function setUserInfo() {
     name.textContent = user.name;
     surname.textContent = user.surname;
     email.textContent = user.email;
-    age.textContent = user.age;
-    gender.value = user.gender;
+    age.textContent = user.age == null ? 'Не вказано' : user.age;
+    gender.value = user.gender ?? 'none';
     password.value = user.password;
 
     totalCommentsElement.innerHTML = `<span>Отримано коментарів:</span> ${totalComments}`;
@@ -92,6 +92,12 @@ function editUserInfo() {
         }
         // Закриваєм редагування.
         else {
+            if (password.value.trim().length < 4 ||
+                email.textContent.trim().length < 6 ||
+                (isNaN(parseInt(age.textContent.trim())) && age.textContent != 'Не вказано') ||
+                name.textContent.trim() == '' ||
+                surname.textContent.trim() == ''
+            ) return;
 
             editButton.classList.add('fa-pencil');
             editButton.classList.remove('fa-floppy-disk');
@@ -122,7 +128,7 @@ function editUserInfo() {
                     id: user.id,
                     name: name.textContent.trim(),
                     surname: surname.textContent.trim(),
-                    age: age.textContent.trim(),
+                    age: parseInt(age.value) ?? null,
                     gender: gender.value,
                     email: email.textContent.trim(),
                     password: password.value.trim()
@@ -276,7 +282,9 @@ function showRecipes(categoryId, sortMethod, sortDirection) {
                 break;
             case 'рейтингом':
                 sortedRecipes.sort((a, b) => {
-                    return sortDirection === 'from-bottom' ? a.rating - b.rating : b.rating - a.rating;
+                    const averageRatingA = calculateAverageRating(a.comments);
+                    const averageRatingB = calculateAverageRating(b.comments);
+                    return sortDirection === 'from-bottom' ? averageRatingA - averageRatingB : averageRatingB - averageRatingA;
                 });
                 break;
         }
@@ -288,6 +296,16 @@ function showRecipes(categoryId, sortMethod, sortDirection) {
     }
     else {
         sortedRecipes.forEach(recipe => recipeList.append(recipeContainer(recipe)));
+    }
+
+    // Функція для обчислення середнього рейтингу коментарів.
+    function calculateAverageRating(comments) {
+        if (comments.length === 0) {
+            return 0; // Якщо коментарів немає, повертаємо 0.
+        }
+
+        const totalRating = comments.reduce((sum, comment) => sum + comment.rating, 0);
+        return totalRating / comments.length;
     }
 }
 

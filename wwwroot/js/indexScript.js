@@ -72,7 +72,9 @@ function showSortedRecipes(sortMethod, sortDirection) {
                 break;
             case 'рейтингом':
                 sortedRecipes.sort((a, b) => {
-                    return sortDirection === 'from-bottom' ? a.rating - b.rating : b.rating - a.rating;
+                    const averageRatingA = calculateAverageRating(a.comments);
+                    const averageRatingB = calculateAverageRating(b.comments);
+                    return sortDirection === 'from-bottom' ? averageRatingA - averageRatingB : averageRatingB - averageRatingA;
                 });
                 break;
         }
@@ -82,6 +84,16 @@ function showSortedRecipes(sortMethod, sortDirection) {
     main.textContent = "";
     // На основі кожного рецепту створити контейнер з його короткою інформацією.
     sortedRecipes.forEach(recipe => main.append(recipeItem(recipe)));
+
+    // Функція для обчислення середнього рейтингу коментарів.
+    function calculateAverageRating(comments) {
+        if (comments.length === 0) {
+            return 0; // Якщо коментарів немає, повертаємо 0.
+        }
+
+        const totalRating = comments.reduce((sum, comment) => sum + comment.rating, 0);
+        return totalRating / comments.length;
+    }
 }
 
 /** Обробник сортбару. */
