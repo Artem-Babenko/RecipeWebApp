@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace RecipeWebApp.Controllers;
 
@@ -51,6 +52,7 @@ public class PageController : Controller
     /// Обробляє HTTP GET-запит для отримання сторінки профілю користувача.
     /// </summary>
     [HttpGet]
+    [Authorize]
     [Route("/profile")]
     public IActionResult GetProfilePage()
     {
@@ -61,9 +63,21 @@ public class PageController : Controller
     /// Обробляє HTTP GET-запит для отримання сторінки створеня рецепту.
     /// </summary>
     [HttpGet]
+    [Authorize]
     [Route("/create")]
     public IActionResult GetCreateRecipePage()
     {
         return File("html/create.html", "text/html; charset=utf-8;");
+    }
+
+    /// <summary>
+    /// Обробляє HTTP GET-запит для отримання сторінки редагування рецепту.
+    /// </summary>
+    [HttpGet]
+    [Authorize]
+    [Route("/edit")]
+    public IActionResult GetEditRecipePage()
+    {
+        return File("html/edit.html", "text/html; charset=utf-8;");
     }
 }

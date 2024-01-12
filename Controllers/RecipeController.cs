@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RecipeWebApp.Models;
 using SixLabors.ImageSharp.Formats.Jpeg;
+using System.Security.Claims;
 
 namespace RecipeWebApp.Controllers;
 
@@ -47,10 +48,34 @@ public class RecipeController : Controller
             .FirstOrDefaultAsync(recipe => recipe.Id == id);
 
         if (recipe is null) return NotFound();
+
+        // Додавання перегляду.
+        recipe.Views++;
+        await db.SaveChangesAsync();
+
         // Надсилання відповіді у вигляді JSON-об'єкта.        
         return Json(recipe);
     }
 
+    /// <summary>
+    /// Обробляє HTTP DELETE-запит для видалення рецепта за ідентифікатором.
+    /// </summary>
+    [HttpDelete]
+    [Authorize]
+    [Route("/recipes/{id:int}")]
+    public async Task<IActionResult> DeleteRecipe(int id)
+    {
+        var recipe = await db.Recipes.FindAsync(id);
+        if (recipe is null) return NotFound();
+
+        // Видалення рецепту з бази даних.
+        db.Recipes.Remove(recipe);
+        // Встановлення фото тимчасовим для того, щоб воно видалилось службою.
+        await db.TemporaryPhotos.AddAsync(new TemporaryPhoto() { Path = recipe.PhotoName ?? "" });
+        await db.SaveChangesAsync();
+
+        return Ok();
+    }
 
     /// <summary>
     /// Обробляє HTTP POST-запит для надсилання та створення коментаря.
@@ -132,4 +157,132 @@ public class RecipeController : Controller
         // Надсилання нової назви доданого фото.
         return Json(new { fileName = fileName });
     }
+
+    /// <summary>
+    /// Обробляє HTTP POST-запит для надсилання моделі рецепта для його створення.
+    /// </summary>
+    [HttpPost]
+    [Authorize]
+    [Route("/recipes")]
+    public async Task<IActionResult> CreateRecipe()
+    {
+        var recipeModel = await Request.ReadFromJsonAsync<RecipeModel>();
+        if (recipeModel is null) return BadRequest();
+
+        // Створення списку інгредієнтів.
+        List<Ingredient> ingredients = new List<Ingredient>();
+        foreach (IngredientModel ingredientModel in recipeModel.ingredients)
+        {
+            var ingredient = new Ingredient();
+            ingredient.Amount = ingredientModel.amount;
+            ingredient.ProductId = ingredientModel.id;
+            ingredients.Add(ingredient);
+        }
+
+        // Створення списку кроків приготування.
+        List<CookingStep> cookingSteps = recipeModel.cookingSteps.ToList();
+
+        // Знаходження категорії.
+        var category = await db.Categories
+            .FirstOrDefaultAsync(c => c.Name == recipeModel.category);
+
+        // Користувач.
+        int id = int.Parse(HttpContext.User.FindFirstValue("Id") ?? "");
+        var user = await db.Users.FindAsync(id);
+
+        // Створення рецепта.
+        Recipe newRecipe = new Recipe()
+        {
+            Name = recipeModel.name,
+            PhotoName = recipeModel.photoName,
+            Description = recipeModel.description,
+            Difficulty = recipeModel.difficulty,
+            CookingTime = TimeSpan.FromMinutes(recipeModel.cookingTime),
+            Ingredients = ingredients,
+            CookingSteps = cookingSteps,
+            Category = category,
+            User = user
+        };
+
+        // Додавання нового рецепта до бази даних.
+        await db.Recipes.AddAsync(newRecipe);
+        // Видалення фото рецепта з тимчасових фото.
+        var tempPhoto = await db.TemporaryPhotos.FirstOrDefaultAsync(t => t.Path == newRecipe.PhotoName);
+        db.TemporaryPhotos.Remove(tempPhoto!);
+        await db.SaveChangesAsync();
+
+        return Ok();
+    }
+
+    /// <summary>
+    /// Обробляє HTTP PUT-запит для надсилання моделі рецепта та оновлення його даних.
+    /// </summary>
+    [HttpPut]
+    [Authorize]
+    [Route("/recipes")]
+    public async Task<IActionResult> UpdateRecipe()
+    {
+        var recipeModel = await Request.ReadFromJsonAsync<RecipeModel>();
+        if (recipeModel is null) return BadRequest("Invalid requst model!");
+
+        var recipe = await db.Recipes
+            .Include(r => r.CookingSteps)
+            .Include(r => r.Ingredients)
+            .FirstOrDefaultAsync(r => r.Id == recipeModel.id);
+        if (recipe is null) return BadRequest("Invalid recipe id!");
+
+        // Оновлення даних.
+        recipe.Name = recipeModel.name;
+        recipe.Description = recipeModel.description;
+        recipe.Difficulty = recipeModel.difficulty;
+        recipe.CookingTime = TimeSpan.FromMinutes(recipeModel.cookingTime);
+        
+        // Оновлення фото.
+        if(recipe.PhotoName != recipeModel.photoName)
+        {
+            // Старе фото додається у тимчасові для побальшого видалення службою.
+            await db.TemporaryPhotos.AddAsync(new TemporaryPhoto() { Path = recipe.PhotoName! });
+            recipe.PhotoName = recipeModel.photoName;
+        }
+
+        // Оновлення категорії.
+        var category = await db.Categories
+            .FirstOrDefaultAsync(c => c.Name == recipeModel.category);
+        recipe.Category = category;
+
+        // Видалення старих інгредієнті.
+        var oldIngredients = recipe.Ingredients.ToList();
+        db.Ingredients.RemoveRange(oldIngredients);
+        // Створення списку інгредієнтів.
+        List<Ingredient> ingredients = new List<Ingredient>();
+        foreach (IngredientModel ingredientModel in recipeModel.ingredients)
+        {
+            var ingredient = new Ingredient();
+            ingredient.Amount = ingredientModel.amount;
+            ingredient.ProductId = ingredientModel.id;
+            ingredients.Add(ingredient);
+        }
+        // Встановлення нових інгедієнтів.
+        recipe.Ingredients = ingredients;
+
+        // Видалення старих кроків.
+        var oldCookingSteps = recipe.CookingSteps.ToList();
+        db.CookingSteps.RemoveRange(oldCookingSteps);
+        // Створення нового списку кроків приготування.
+        List<CookingStep> cookingSteps = recipeModel.cookingSteps.ToList();
+        // Встановлення нових кроків приготування.
+        recipe.CookingSteps = cookingSteps;
+
+        await db.SaveChangesAsync();
+        return Ok();
+    }
+
 }
+
+record RecipeModel(int id, string category, string name,
+    string description, string photoName,
+    int cookingTime, string difficulty,
+    IngredientModel[] ingredients,
+    CookingStep[] cookingSteps);
+
+record IngredientModel(int id, float amount);

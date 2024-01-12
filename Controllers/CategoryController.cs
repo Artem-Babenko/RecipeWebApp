@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using RecipeWebApp.Models;
 
 namespace RecipeWebApp.Controllers;
@@ -9,11 +10,13 @@ namespace RecipeWebApp.Controllers;
 /// </summary>
 public class CategoryController : Controller
 {
-    /// <summary>
-    /// Контекст бази даних.
-    /// </summary>
-    RecipeDbContext db;
-    public CategoryController(RecipeDbContext db) => this.db = db;
+    private readonly RecipeDbContext db;
+    private readonly IMemoryCache memoryCache;
+    public CategoryController(RecipeDbContext db, IMemoryCache memoryCache)
+    {
+        this.db = db;
+        this.memoryCache = memoryCache;
+    }
 
     /// <summary>
     /// Обробляє HTTP GET-запит для отримання списоку усіх категорій.
@@ -22,7 +25,16 @@ public class CategoryController : Controller
     [Route("/categories")]
     public async Task<IActionResult> GetCategories()
     {
-        var categories = await db.Categories.ToListAsync();
+        // Спроба отримати категорії з кешу.
+        if(memoryCache.TryGetValue("categories", out List<Category>? categories))
+        {
+            return Json(categories);
+        }
+
+        // Якщо у кеші немає, отримання категорій з бази даних.
+        categories = await db.Categories.ToListAsync();
+        // Занесення до кешу.
+        memoryCache.Set("categories", categories, TimeSpan.FromHours(1));
         return Json(categories);
     }
 
@@ -33,7 +45,16 @@ public class CategoryController : Controller
     [Route("/categories/main")]
     public async Task<IActionResult> GetMainCategories()
     {
-        var mainCategories = await db.Categories.Where(c => c.ParentCategoryId == null).ToListAsync();
+        // Спроба отримати головні категорії з кешу.
+        if (memoryCache.TryGetValue("mainCategories", out List<Category>? mainCategories))
+        {
+            return Json(mainCategories);
+        }
+
+        // Якщо у кеші немає, отримання головних категорій з бази даних.
+        mainCategories = await db.Categories.Where(c => c.ParentCategoryId == null).ToListAsync();
+        // Занесення до кешу.
+        memoryCache.Set("mainCategories", mainCategories, TimeSpan.FromHours(1));
         return Json(mainCategories);
     }
 
@@ -92,11 +113,19 @@ public class CategoryController : Controller
     [Route("/categories/last")]
     public async Task<IActionResult> GetLastCategories()
     {
-        // Вибірка категоій які немають дочірніх.
-        List<Category> categories = await db.Categories
+        // Спроба отримати останні категорії з кешу.
+        if (memoryCache.TryGetValue("lastCategories", out List<Category>? lastCategories))
+        {
+            return Json(lastCategories);
+        }
+
+        // Якщо у кеші немає, отримання вибірки категоій які немають дочірніх з бази даних.
+        lastCategories = await db.Categories
             .Where(c => c.Subcategories.Count == 0)
             .ToListAsync();
-        return Json(categories);
+        // Занесення до кешу.
+        memoryCache.Set("lastCategories", lastCategories, TimeSpan.FromHours(1));
+        return Json(lastCategories);
     }
 
     /// <summary>

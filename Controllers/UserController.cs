@@ -45,10 +45,6 @@ public class UserController : Controller
         var principal = new ClaimsPrincipal(identity);
 
         await HttpContext.SignInAsync(principal);
-
-        Response.Cookies.Append("UserName", user.Name ?? "");
-        Response.Cookies.Append("UserSurname", user.Surname ?? "");
-
         return Ok();
     }
 
@@ -57,13 +53,10 @@ public class UserController : Controller
     /// Перехід на головну сторінку.
     /// </summary>
     [HttpGet]
-    [Authorize]
     [Route("/user/logout")]
     public async Task<IActionResult> UserLogout()
     {
         await HttpContext.SignOutAsync();
-        Response.Cookies.Delete("UserName");
-        Response.Cookies.Delete("UserSurname");
         return Redirect("/");
     }
 
@@ -95,10 +88,6 @@ public class UserController : Controller
         var principal = new ClaimsPrincipal(identity);
 
         await HttpContext.SignInAsync(principal);
-
-        Response.Cookies.Append("UserName", newUser.Name ?? "");
-        Response.Cookies.Append("UserSurname", newUser.Surname ?? "");
-
         return Redirect("/");
     }
 
@@ -106,11 +95,10 @@ public class UserController : Controller
     /// Обробляє HTTP GET-запит для отримання поточного користувача з його усіма даними.
     /// </summary>
     [HttpGet]
-    [Authorize]
     [Route("/user")]
     public async Task<IActionResult> GetUser()
     {
-        int id = int.Parse(HttpContext.User.FindFirstValue("Id") ?? "");
+        int id = int.Parse(HttpContext.User.FindFirstValue("Id") ?? "0");
 
         var user = await db.Users
             .Include(u => u.Recipes)
