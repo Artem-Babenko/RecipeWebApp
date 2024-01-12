@@ -12,7 +12,7 @@ using RecipeWebApp.Models;
 namespace RecipeWebApp.Migrations
 {
     [DbContext(typeof(RecipeDbContext))]
-    [Migration("20231230104824_InitialMigration")]
+    [Migration("20240111150809_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -341,7 +341,7 @@ namespace RecipeWebApp.Migrations
                         {
                             Id = 1,
                             CountOfLikes = 0,
-                            CreateTime = new DateTime(2023, 12, 30, 12, 48, 24, 341, DateTimeKind.Local).AddTicks(1424),
+                            CreateTime = new DateTime(2024, 1, 11, 17, 8, 9, 759, DateTimeKind.Local).AddTicks(7136),
                             Rating = 5f,
                             RecipeId = 4,
                             Title = "Все вийшло, рецепт дуже класний, раджу всім!",
@@ -351,7 +351,7 @@ namespace RecipeWebApp.Migrations
                         {
                             Id = 2,
                             CountOfLikes = 0,
-                            CreateTime = new DateTime(2023, 12, 30, 12, 48, 24, 341, DateTimeKind.Local).AddTicks(1470),
+                            CreateTime = new DateTime(2024, 1, 11, 17, 8, 9, 759, DateTimeKind.Local).AddTicks(7190),
                             Rating = 4f,
                             RecipeId = 4,
                             Title = "Спочатку трішки не вийшло з чисткою риби, але потім все зробила так як треба, чоловіку дуже сподобалось:)",
@@ -473,16 +473,15 @@ namespace RecipeWebApp.Migrations
                     b.Property<double>("Amount")
                         .HasColumnType("float");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Unit")
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
 
                     b.HasIndex("RecipeId");
 
@@ -493,63 +492,288 @@ namespace RecipeWebApp.Migrations
                         {
                             Id = 1,
                             Amount = 500.0,
-                            Name = "Філе минтая",
-                            RecipeId = 4,
-                            Unit = "гр"
+                            ProductId = 1,
+                            RecipeId = 4
                         },
                         new
                         {
                             Id = 2,
-                            Amount = 6.0,
-                            Name = "Білий хліб",
-                            RecipeId = 4,
-                            Unit = "шматочків"
+                            Amount = 100.0,
+                            ProductId = 2,
+                            RecipeId = 4
                         },
                         new
                         {
                             Id = 3,
                             Amount = 100.0,
-                            Name = "Молоко",
-                            RecipeId = 4,
-                            Unit = "мл"
+                            ProductId = 3,
+                            RecipeId = 4
                         },
                         new
                         {
                             Id = 4,
                             Amount = 1.0,
-                            Name = "Яйце куряче",
-                            RecipeId = 4,
-                            Unit = "шт"
+                            ProductId = 4,
+                            RecipeId = 4
                         },
                         new
                         {
                             Id = 5,
                             Amount = 1.0,
-                            Name = "Цибуля ріпчаста",
-                            RecipeId = 4,
-                            Unit = "шт"
+                            ProductId = 5,
+                            RecipeId = 4
                         },
                         new
                         {
                             Id = 6,
                             Amount = 2.0,
-                            Name = "Олія соняшникова",
-                            RecipeId = 4,
-                            Unit = "ст. л."
+                            ProductId = 6,
+                            RecipeId = 4
                         },
                         new
                         {
                             Id = 7,
-                            Amount = 0.0,
-                            Name = "Сіль, чорний перець, кріп",
+                            Amount = 50.0,
+                            ProductId = 8,
                             RecipeId = 4
                         },
                         new
                         {
                             Id = 8,
                             Amount = 0.0,
-                            Name = "Сухарі панірувальні",
+                            ProductId = 7,
                             RecipeId = 4
+                        });
+                });
+
+            modelBuilder.Entity("RecipeWebApp.Models.Product", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("float");
+
+                    b.Property<float>("Calories")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Carbohydrate")
+                        .HasColumnType("real");
+
+                    b.Property<float>("Fats")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Proteins")
+                        .HasColumnType("real");
+
+                    b.Property<string>("Unit")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("Weight")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Products");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Amount = 100.0,
+                            Calories = 72f,
+                            Carbohydrate = 0f,
+                            Fats = 1f,
+                            Name = "Філе минтая",
+                            Proteins = 16f,
+                            Unit = "г"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Amount = 100.0,
+                            Calories = 257f,
+                            Carbohydrate = 52f,
+                            Fats = 1f,
+                            Name = "Білий хліб",
+                            Proteins = 7.7f,
+                            Unit = "г"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Amount = 100.0,
+                            Calories = 51f,
+                            Carbohydrate = 4.7f,
+                            Fats = 2.5f,
+                            Name = "Молоко 2.5%",
+                            Proteins = 3f,
+                            Unit = "мл"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Amount = 1.0,
+                            Calories = 83f,
+                            Carbohydrate = 0.5f,
+                            Fats = 6f,
+                            Name = "Яйце куряче",
+                            Proteins = 7f,
+                            Unit = "шт",
+                            Weight = 55.0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Amount = 1.0,
+                            Calories = 43f,
+                            Carbohydrate = 9f,
+                            Fats = 0.25f,
+                            Name = "Цибуля ріпчаста",
+                            Proteins = 1.5f,
+                            Unit = "шт",
+                            Weight = 70.0
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Amount = 1.0,
+                            Calories = 90f,
+                            Carbohydrate = 0.01f,
+                            Fats = 9.95f,
+                            Name = "Олія соняшникова",
+                            Proteins = 0.01f,
+                            Unit = "ст. л.",
+                            Weight = 9.3000001907348633
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Amount = 0.0,
+                            Calories = 0f,
+                            Carbohydrate = 0f,
+                            Fats = 0f,
+                            Name = "Сіль, чорний перець",
+                            Proteins = 0f
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Amount = 10.0,
+                            Calories = 24f,
+                            Carbohydrate = 5f,
+                            Fats = 0.2f,
+                            Name = "Сухарі панірувальні",
+                            Proteins = 1f,
+                            Unit = "г"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Amount = 100.0,
+                            Calories = 321f,
+                            Carbohydrate = 0f,
+                            Fats = 29.3f,
+                            Name = "Ребра свинячі",
+                            Proteins = 29f,
+                            Unit = "г"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Amount = 100.0,
+                            Calories = 0f,
+                            Carbohydrate = 0f,
+                            Fats = 0f,
+                            Name = "Вода",
+                            Proteins = 0f,
+                            Unit = "мл"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Amount = 100.0,
+                            Calories = 324f,
+                            Carbohydrate = 73.7f,
+                            Fats = 1.1f,
+                            Name = "Крупа перлова",
+                            Proteins = 9.3f,
+                            Unit = "г"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Amount = 1.0,
+                            Calories = 120f,
+                            Carbohydrate = 24f,
+                            Fats = 0.1f,
+                            Name = "Картопля",
+                            Proteins = 2.3f,
+                            Unit = "шт",
+                            Weight = 130.0
+                        },
+                        new
+                        {
+                            Id = 13,
+                            Amount = 1.0,
+                            Calories = 35f,
+                            Carbohydrate = 7.3f,
+                            Fats = 0.2f,
+                            Name = "Морква",
+                            Proteins = 1f,
+                            Unit = "шт",
+                            Weight = 85.0
+                        },
+                        new
+                        {
+                            Id = 14,
+                            Amount = 1.0,
+                            Calories = 8f,
+                            Carbohydrate = 1.2f,
+                            Fats = 0.05f,
+                            Name = "Огірок солоний",
+                            Proteins = 1f,
+                            Unit = "шт",
+                            Weight = 60.0
+                        },
+                        new
+                        {
+                            Id = 15,
+                            Amount = 1.0,
+                            Calories = 19f,
+                            Carbohydrate = 3.5f,
+                            Fats = 0.3f,
+                            Name = "Лавровий лист",
+                            Proteins = 0.5f,
+                            Unit = "шт",
+                            Weight = 5.0
+                        },
+                        new
+                        {
+                            Id = 16,
+                            Amount = 0.0,
+                            Calories = 0f,
+                            Carbohydrate = 0f,
+                            Fats = 0f,
+                            Name = "Кріп, петрушка",
+                            Proteins = 0f
+                        },
+                        new
+                        {
+                            Id = 17,
+                            Amount = 100.0,
+                            Calories = 12f,
+                            Carbohydrate = 3f,
+                            Fats = 0f,
+                            Name = "Огірковий розсіл",
+                            Proteins = 0.3f,
+                            Unit = "мл"
                         });
                 });
 
@@ -582,9 +806,6 @@ namespace RecipeWebApp.Migrations
                     b.Property<string>("PhotoName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<float>("Rating")
-                        .HasColumnType("real");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -605,12 +826,11 @@ namespace RecipeWebApp.Migrations
                             Id = 1,
                             CategoryId = 25,
                             CookingTime = new TimeSpan(0, 0, 40, 0, 0),
-                            CreateDate = new DateTime(2023, 12, 30, 12, 48, 24, 341, DateTimeKind.Local).AddTicks(1488),
+                            CreateDate = new DateTime(2024, 1, 11, 17, 8, 9, 759, DateTimeKind.Local).AddTicks(7208),
                             Description = "Оливка піца з сиром та томатним соусом - це прекрасна комбінація смаків та ароматів, яка задовольнить ваші гастрономічні бажання. Ця піца поєднує в собі солодкий смак томатного соусу, ароматний сир та інтенсивний смак оливок.\r\n\r\nПіца приготована на тонкому або товстому тісті, в залежності від вашого вибору. Тонке тісто надає піці легкість, тоді як товсте тісто робить її більш насиченою та ситною.\r\n\r\nНа тонкому або товстому коржі рівномірно розподілено томатний соус, який надає піці основний та смачний смак. Верхню частину покриває або ковбаса моцарелли, або комбінація сирів, таких як пармезан, чеддер або гауда.\r\n\r\nОсновна ідея полягає в тому, щоб нарізати оливки на тонкі кільця та рівномірно розподілити їх по всій піці. Це додає піці не тільки смак оливок, але й гарний зовнішній вигляд.\r\n\r\nПісля того, як піца випічена, на неї можна додати свіжі зелені, такі як базилік чи рукола, для додаткового аромату та свіжості.",
                             Difficulty = "Нормально",
                             Name = "Оливкова піца",
                             PhotoName = "pizza-cheese-tomatoes-olives.jpg",
-                            Rating = 4.7f,
                             UserId = 1,
                             Views = 76
                         },
@@ -619,12 +839,11 @@ namespace RecipeWebApp.Migrations
                             Id = 2,
                             CategoryId = 324,
                             CookingTime = new TimeSpan(0, 0, 25, 0, 0),
-                            CreateDate = new DateTime(2023, 12, 30, 12, 48, 24, 341, DateTimeKind.Local).AddTicks(1494),
+                            CreateDate = new DateTime(2024, 1, 11, 17, 8, 9, 759, DateTimeKind.Local).AddTicks(7214),
                             Description = "Шеф-салат - це вишукана та смачна страва, яка зазвичай подається в ресторанах як підкреслення кулінарної майстерності шеф-кухаря. Одним із класичних варіантів є \"Цезар\", який являє собою комбінацію свіжих листків салату, курячого філе, гартованого яйця, гарячого бекону, пармезану та ароматного соусу.\r\n\r\nОсновні складники шеф-салату можуть варіюватися залежно від рецепту та кухні, але зазвичай вони включають в себе свіжі овочі, м'ясо або рибу, сир, гарнір та соус.",
                             Difficulty = "Легко",
                             Name = "Шеф-салат",
                             PhotoName = "chef-salad.jpg",
-                            Rating = 3.8f,
                             UserId = 1,
                             Views = 43
                         },
@@ -633,12 +852,11 @@ namespace RecipeWebApp.Migrations
                             Id = 3,
                             CategoryId = 27,
                             CookingTime = new TimeSpan(0, 1, 20, 0, 0),
-                            CreateDate = new DateTime(2023, 12, 30, 12, 48, 24, 341, DateTimeKind.Local).AddTicks(1498),
+                            CreateDate = new DateTime(2024, 1, 11, 17, 8, 9, 759, DateTimeKind.Local).AddTicks(7218),
                             Description = "Шоколадний торт з полуницями - це чудовий десерт, який поєднує в собі солодкість шоколадного бісквіта з ароматом свіжих полуниць.",
                             Difficulty = "Складно",
                             Name = "Шоколадний тортик з полуницями",
                             PhotoName = "chocolate-cake.jpg",
-                            Rating = 4.3f,
                             UserId = 1,
                             Views = 58
                         },
@@ -647,15 +865,34 @@ namespace RecipeWebApp.Migrations
                             Id = 4,
                             CategoryId = 11,
                             CookingTime = new TimeSpan(0, 1, 0, 0, 0),
-                            CreateDate = new DateTime(2023, 12, 30, 12, 48, 24, 341, DateTimeKind.Local).AddTicks(1501),
+                            CreateDate = new DateTime(2024, 1, 11, 17, 8, 9, 759, DateTimeKind.Local).AddTicks(7221),
                             Description = "Рибні котлети – це ароматна, неймовірно смачна та дієтична страва. Вони на тривалий час насичують організм, ідеально поєднується з різноманітними гарнірами та соусами. Ніжні рибні котлети стануть чудовою альтернативою звичайній смаженій рибі.",
                             Difficulty = "Нормально",
                             Name = "Рибні котлети",
                             PhotoName = "rybni-kotlety.jpg",
-                            Rating = 4.5f,
                             UserId = 1,
                             Views = 22
                         });
+                });
+
+            modelBuilder.Entity("RecipeWebApp.Models.TemporaryPhoto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreationTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TemporaryPhotos");
                 });
 
             modelBuilder.Entity("RecipeWebApp.Models.User", b =>
@@ -681,9 +918,6 @@ namespace RecipeWebApp.Migrations
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Surname")
                         .HasColumnType("nvarchar(max)");
 
@@ -695,7 +929,7 @@ namespace RecipeWebApp.Migrations
                         new
                         {
                             Id = 1,
-                            Email = "artem@gmail.com",
+                            Email = "babenkoartem505@gmail.com",
                             Name = "Артем",
                             Password = "12345678",
                             Surname = "Бабенко"
@@ -735,11 +969,19 @@ namespace RecipeWebApp.Migrations
 
             modelBuilder.Entity("RecipeWebApp.Models.Ingredient", b =>
                 {
+                    b.HasOne("RecipeWebApp.Models.Product", "Product")
+                        .WithMany("Ingregients")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("RecipeWebApp.Models.Recipe", "Recipe")
                         .WithMany("Ingredients")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Product");
 
                     b.Navigation("Recipe");
                 });
@@ -768,6 +1010,11 @@ namespace RecipeWebApp.Migrations
                     b.Navigation("Recipes");
 
                     b.Navigation("Subcategories");
+                });
+
+            modelBuilder.Entity("RecipeWebApp.Models.Product", b =>
+                {
+                    b.Navigation("Ingregients");
                 });
 
             modelBuilder.Entity("RecipeWebApp.Models.Recipe", b =>
