@@ -57,7 +57,9 @@ function showSortedRecipes(sortMethod, sortDirection) {
         switch (sortMethod) {
             case 'датою':
                 sortedRecipes.sort((a, b) => {
-                    return sortDirection === 'from-bottom' ? a.createDate - b.createDate : b.createDate - a.createDate;
+                    const dateA = new Date(a.createDate);
+                    const dateB = new Date(b.createDate);
+                    return sortDirection === 'from-bottom' ? dateA - dateB : dateB - dateA;
                 });
                 break;
             case 'популярністю':
@@ -478,27 +480,36 @@ function renderCategories(mainCategories, allCategories) {
 }
 
 /** Встановлення користувача на клавішу профілю. */
-function setUser() {
-
-    function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-
+async function setUser() {
     const userInfoElement = document.querySelector('.user-info');
-    const userNameEncoded = getCookie('UserName');
-    const userSurnameEncoded = getCookie('UserSurname');
+    const userName = Cookies.get('UserName');
+    const userSurname = Cookies.get('UserSurname');
 
-    if (userNameEncoded && userSurnameEncoded) {
-        const userName = decodeURIComponent(userNameEncoded);
-        const userSurname = decodeURIComponent(userSurnameEncoded);
-
+    // Якщо куки є то встановлюєм клавішу профілю.
+    if (userName && userSurname) {
         userInfoElement.innerHTML = `<i class="fa-regular fa-user"></i> ${userName} ${userSurname}`;
         userInfoElement.href = '/profile'
-    } else {
+    }
+    else {
         userInfoElement.innerHTML = '<i class="fa-regular fa-user"></i> Увійти';
         userInfoElement.href = '/login'
+    }
+
+    // Якщо немає реєстрації - завершуєм функцію.
+    if (!Cookies.get('AuthenticationCookie')) return;
+    // Оновлюєм куки.
+    const response = await fetch('/user', {
+        method: "GET",
+        headers: { "Accept" : "application/json" }
+    });
+
+    if (response.ok && response) {
+        const result = await response.json();
+        Cookies.set('UserName', result.user.name);
+        Cookies.set('UserSurname', result.user.surname);
+
+        userInfoElement.innerHTML = `<i class="fa-regular fa-user"></i> ${result.user.name} ${result.user.surname}`;
+        userInfoElement.href = '/profile'
     }
 }
 

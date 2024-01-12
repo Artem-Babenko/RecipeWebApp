@@ -128,7 +128,7 @@ function editUserInfo() {
                     id: user.id,
                     name: name.textContent.trim(),
                     surname: surname.textContent.trim(),
-                    age: parseInt(age.value) ?? null,
+                    age: parseInt(age.textContent.trim()),
                     gender: gender.value,
                     email: email.textContent.trim(),
                     password: password.value.trim()
@@ -255,6 +255,43 @@ function categoryLinkButton(category) {
     return categoryContainer;
 }
 
+/** Функція відкриття панелі підтвердження видалення рецепта. */
+function openDeletePanel(container, recipeId) {
+    const deletePanel = document.querySelector('.delete-message');
+    deletePanel.style.opacity = 1;
+    deletePanel.style.zIndex = 1;
+
+    // Елемент з клавішами вибору.
+    const buttons = deletePanel.querySelector('.buttons');
+    buttons.textContent = "";
+
+    // Клавіша так.
+    const yesButton = document.createElement('p');
+    yesButton.textContent = 'Так';
+    yesButton.addEventListener('click', async () => {
+        container.remove();
+        const response = await fetch(`/recipes/${recipeId}`, {
+            method: "DELETE"
+        });
+        if (response.ok) closeDeletePanel();
+    });
+    buttons.appendChild(yesButton);
+
+    // Клавіша ні.
+    const noButton = document.createElement('p');
+    noButton.textContent = "Ні";
+    noButton.addEventListener('click', () => {
+        closeDeletePanel();
+    });
+    buttons.appendChild(noButton);
+}
+
+/** Функція закриття панелі підтвердження видалення рецепта. */
+function closeDeletePanel() {
+    const deletePanel = document.querySelector('.delete-message');
+    deletePanel.style.opacity = 0;
+    setTimeout(() => deletePanel.style.zIndex = -1, 500);
+}
 
 /** Показує всі рецепти користувача або рецепти які належать категорії. */
 function showRecipes(categoryId, sortMethod, sortDirection) {
@@ -267,7 +304,9 @@ function showRecipes(categoryId, sortMethod, sortDirection) {
         switch (sortMethod) {
             case 'датою':
                 sortedRecipes.sort((a, b) => {
-                    return sortDirection === 'from-bottom' ? a.createDate - b.createDate : b.createDate - a.createDate;
+                    const dateA = new Date(a.createDate);
+                    const dateB = new Date(b.createDate);
+                    return sortDirection === 'from-bottom' ? dateA - dateB : dateB - dateA;
                 });
                 break;
             case 'популярністю':
@@ -422,12 +461,18 @@ function recipeContainer(recipe) {
     const editButton = document.createElement('button');
     editButton.classList.add('edit-button');
     editButton.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>';
+    editButton.addEventListener('click', () => {
+        window.location.href = `/edit?id=${recipe.id}`;
+    });
     interactionsBlock.appendChild(editButton);
 
     // Клавіша видалення рецепту.
     const deleteButton = document.createElement('button');
     deleteButton.classList.add('delete-button');
     deleteButton.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+    deleteButton.addEventListener('click', () => {
+        openDeletePanel(container, recipe.id);
+    });
     interactionsBlock.appendChild(deleteButton);
 
     // Кінець блоку взаємодії та додавання його у контейнер.
@@ -470,6 +515,12 @@ function formatTime(time) {
 
     return result.trim(); // Видаляємо можливі пробіли в кінці
 }
+
+document.querySelector('.logout-button').addEventListener('click', () => {
+    Cookies.remove('UserName');
+    Cookies.remove('UserSurname');
+    window.location.href = '/user/logout';
+});
 
 async function initializePage() {
     await getUser();

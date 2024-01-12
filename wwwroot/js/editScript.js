@@ -6,13 +6,90 @@ const ingredientList = document.querySelector('.ingredient-list');
 const addProductButton = document.querySelector('.ingredients-panel .add-button');
 const addCookingStepButton = document.querySelector('.step-panel .add-button');
 const cookingStepList = document.querySelector('.step-panel .step-list');
-const createButton = document.getElementById('createButton');
+const saveButton = document.getElementById('saveButton');
 const productSearch = document.getElementById('productSearch');
+
 /** Масив вибраних продуктів. */
 let selectedProducts = [];
 /** Всі продукти завантажені з серверу. */
 let allProducts = [];
 let cookingSteps = [];
+let recipe;
+
+async function getRecipe() {
+    // Отримання ідентифікатору рецепта з запиту.
+    const currentUrl = window.location.href;
+    const { searchParams } = new URL(currentUrl);
+    const id = searchParams.get('id');
+
+    // Запит на сервер
+    const response = await fetch(`/recipes/${id}`, {
+        method: "GET",
+        headers: { "Accept": "application/json" }
+    });
+
+    recipe = await response.json();
+
+    setInfo();
+}
+
+async function setInfo() {
+    const name = document.getElementById('recipeName');
+    const category = document.getElementById('recipeCaterory');
+    const difficulty = document.getElementById('recipeDifficulty');
+    const description = document.getElementById('recipeDescription');
+    const img = document.getElementById('photoImg');
+    const hoursInput = document.getElementById('hoursCookingTime');
+    const minutesInput = document.getElementById('minutesCookingTime');
+
+    // Встановленя текстових даних.
+    name.value = recipe.name;
+    difficulty.value = recipe.difficulty;
+    description.textContent = recipe.description;
+    description.style.height = description.scrollHeight + "px";
+
+    // Встановлення категорії.
+    await getPossibleToSetCategories();
+    category.querySelectorAll('option').forEach(option => {
+        if (option.value == recipe.category.name) {
+            option.selected = true;
+            return;
+        }
+    });
+    
+    // Встановлення фото.
+    document.getElementById('photo').style.display = "none";
+    document.getElementById('dropcontainer').style.display = "none";
+    img.setAttribute('src', "/photos/" + recipe.photoName);
+    document.getElementById("double-click").style.display = "flex";
+
+    // Встановлення часу.
+    const [hoursStr, minutesStr] = recipe.cookingTime.split(':');
+    hoursInput.value = parseInt(hoursStr, 10) == 0 ? "" : parseInt(hoursStr, 10);
+    minutesInput.value = parseInt(minutesStr, 10);
+
+    // Встановлення інгредієнтів.
+    for (const ingredient of recipe.ingredients) {
+        product = {
+            id: ingredient.product.id,
+            name: ingredient.product.name,
+            amount: ingredient.amount,
+            unit: ingredient.product.unit,
+        }
+        selectedProducts.push(product);
+        // Додавання рядка Інгредієнта.
+        ingredientList.appendChild(ingredientRow(product));
+    }
+    productList.textContent = '';
+    setProducts(allProducts);
+
+    // Встановлення кроків приготування.
+    for (const step of recipe.cookingSteps) {
+        cookingSteps.push(step);
+        const index = cookingStepList.children.length + 1;
+        cookingStepList.appendChild(cookingStepRow(index, step));
+    }
+}
 
 /** Функція отримання можливих категорій для створення рецепту. */
 async function getPossibleToSetCategories() {
@@ -185,7 +262,7 @@ function ingredientRow(product) {
         for (let i = 0; i < selectedProducts.length; i++) {
             if (selectedProducts[i].id === product.id) {
                 selectedProducts.splice(i, 1);
-                break; 
+                break;
             }
         }
         console.log(selectedProducts);
@@ -213,7 +290,7 @@ addCookingStepButton.addEventListener('click', function () {
 });
 
 /* Елемент, який надає поле для запису кроку приготування. */
-function cookingStepRow(stepCount) {
+function cookingStepRow(stepCount, stepObj) {
     const container = document.createElement('div');
     container.classList.add('step');
 
@@ -225,6 +302,10 @@ function cookingStepRow(stepCount) {
     const textarea = document.createElement('textarea');
     textarea.classList.add('dynamic-textarea');
     textarea.setAttribute('placeholder', 'Опис кроку...');
+    if (stepObj) textarea.textContent = stepObj.title ?? "";
+    document.addEventListener("DOMContentLoaded", () => {
+        textarea.style.height = textarea.scrollHeight + "px";
+    });
     textarea.addEventListener('input', () => {
         cookingSteps[cookingSteps.findIndex(step => step.stepIndex === stepCount)].title = textarea.value;
     });
@@ -317,7 +398,7 @@ function deleteTemporaryPhoto() {
     document.getElementById("double-click").style.display = "none";
 }
 
-createButton.addEventListener('click', () => {
+saveButton.addEventListener('click', () => {
     saveRecipe();
 });
 
@@ -329,7 +410,7 @@ async function saveRecipe() {
     for (const product of selectedProducts) {
         const ingredient = {
             id: product.id,
-            amount: product.amount
+            amount: product.amount,
         }
         ingredients.push(ingredient);
     }
@@ -357,6 +438,7 @@ async function saveRecipe() {
     ) return;
 
     const recipeObj = {
+        id: recipe.id,
         name: name,
         photoName: photoNаme,
         ingredients: ingredients,
@@ -369,7 +451,7 @@ async function saveRecipe() {
 
     //console.log(recipeObj);
     const response = await fetch(`/recipes`, {
-        method: "POST",
+        method: "PUT",
         headers: { "Accept": "application/json", "Content-Type": "application/json" },
         body: JSON.stringify(recipeObj)
     });
@@ -378,6 +460,7 @@ async function saveRecipe() {
 }
 
 // Виклик функцій. 
-getPossibleToSetCategories();
+
+getRecipe();
 getProducts();
 dragAndDropEvents();

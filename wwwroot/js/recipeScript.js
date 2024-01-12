@@ -262,7 +262,7 @@ function rateRecipe(event) {
         const ratingValue = event.target.getAttribute('data-value');
 
         // Очистити всі зірочки
-        document.querySelectorAll('.rating i').forEach(star => star.classList.replace('fa-solid', 'fa-regular'));
+        document.querySelectorAll('#recipeRating i').forEach(star => star.classList.replace('fa-solid', 'fa-regular'));
 
         // Заповнити відповідну кількість зірочок
         for (let i = 1; i <= ratingValue; i++) {
