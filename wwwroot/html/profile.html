@@ -37,13 +37,13 @@
 
                 <label>Пошта:</label>
                 <p class="email"></p>
-                
+
                 <label>Пароль:</label>
-                <input class="password" type="password" disabled/>
+                <input class="password" type="password" disabled />
 
                 <i class="fa-solid fa-pencil edit-button"></i>
             </div>
-            
+
             <!-- Коротка статистика користувача -->
             <div class="statistics">
                 <h3>Статистика</h3>
@@ -55,7 +55,7 @@
             </div>
 
             <!-- Клавіша виходу з профіля -->
-            <a href="/user/logout" class="logout-button"><i class="fa-solid fa-arrow-right-from-bracket"></i>Вийти</a>
+            <div class="logout-button"><i class="fa-solid fa-arrow-right-from-bracket"></i>Вийти</div>
         </div>
 
         <div class="recipes-info">
@@ -81,9 +81,19 @@
             <!-- Список рецептів -->
             <div class="recipes-list"></div>
         </div>
-        
+
     </main>
 
+    <!-- Повідомлення про придалення -->
+    <div class="delete-message">
+        <h2>Хочете видалити рецепт?</h2>
+        <div class="buttons">
+            <p>Так</p>
+            <p>Ні</p>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
     <script src="/js/profileScript.js"></script>
 </body>
 </html>
