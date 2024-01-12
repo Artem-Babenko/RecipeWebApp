@@ -16,7 +16,6 @@ body {
     justify-content: center;
     margin: 0 auto;
     max-width: 1200px;
-    overflow: hidden;
 }
 
 /* Голова сайту */
@@ -189,7 +188,7 @@ main {
     color: #ddd;
 }
 
-.user-info a.logout-button{
+.user-info .logout-button{
     background-color: #BC4749;
     padding: 10px 20px;
     text-decoration: none;
@@ -205,7 +204,7 @@ main {
     transition: all 0.2s ease;
 }
 
-.user-info a.logout-button:hover{
+.user-info .logout-button:hover{
     background-color: #d43033;
 }
 
@@ -329,7 +328,7 @@ main {
     gap: 20px;
     overflow-y: scroll;
     overflow-x: hidden;
-    max-height: calc(100% - 350px);
+    max-height: 650px;
     border-radius: 10px;
     transition: all 0.5s ease;
 }
@@ -461,13 +460,67 @@ main {
     background-color: #d43033;
 }
 
+/* Повідомлення про видалення */
+
+.delete-message{
+    position: fixed; 
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0,0,0,0.3);
+    padding: 0 30%;
+    opacity: 0;
+    z-index: -1;
+    transition: all 0.5s ease;
+}
+
+.delete-message h2{
+    background-color: white;
+    border-radius: 10px 10px 0 0;
+    width: 100%;
+    text-align: center;
+    padding: 10px 20px;
+}
+
+.delete-message .buttons{
+    display: flex;
+    width: 100%;
+}
+
+.delete-message .buttons p{
+    width: 50%;
+    text-align: center;
+    background-color: #BC4749;
+    color: white;
+    font-weight: 500;
+    font-size: 18px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.delete-message .buttons p:hover{
+    box-shadow: 1px 3px 10px rgba(0,0,0,0.3);
+    z-index: 3;
+}
+
+.delete-message .buttons p:first-of-type{
+    border-radius: 0 0 0 10px;
+}
+
+.delete-message .buttons p:last-of-type{
+    border-radius: 0 0 10px 0;
+    background-color: #2a9d8f;
+}
+
 @media screen and (width > 1200px){
     header{
         margin-top: 20px;
         border-radius: 15px;
-    }
-
-    .recipes-list{
-        height: calc(100% - 250px);
     }
 }

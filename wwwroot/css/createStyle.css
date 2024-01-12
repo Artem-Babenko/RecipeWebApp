@@ -20,16 +20,14 @@ body{
 header{
     background-color: #222;
     color: white;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 20px 40px;
     position: relative;
 }
 
 #homeButton {
-    position: absolute;
-    top: 0;
-    left: 0;
-    margin: 17px 40px;
     text-decoration: none;
     color: white;
     padding: 10px 20px;
@@ -40,6 +38,7 @@ header{
     font-size: 18px;
     font-weight: 400;
     border-radius: 20px;
+    box-shadow: 1px 3px 5px rgba(0,0,0,0.3);
     transition: all 0.2s ease;
 }
 
@@ -49,6 +48,25 @@ header{
 
 header h2{
     font-size: 30px;
+}
+
+#createButton, #saveButton {
+    color: black;
+    font-weight: 500;
+    padding: 10px 20px;
+    background-color: #eee;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 1px 3px 5px rgba(0,0,0,0.3);
+    transition: all 0.2s ease;
+}
+
+#createButton:hover, #saveButton:hover{
+    background-color: white;
 }
 
 /* Інформація */
@@ -75,7 +93,7 @@ input#recipeName{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 10px 60px;
+    margin: 10px 40px;
 }
 
 .info .container{
@@ -107,6 +125,7 @@ textarea#recipeDescription{
     margin: 10px 40px;
     resize: none;
     padding: 10px 20px;
+    overflow-y: hidden;
 }
 
 /* Фото та дроп-контейнер */
@@ -276,6 +295,82 @@ img {
 
 .ingredients-panel .add-button:hover{
     background-color: #d43033;
+}
+
+/* Кроки приготування */
+
+.step-panel {
+    margin: 10px 40px;
+    padding: 0 60px;
+    text-align: center;
+}
+
+.step-panel h2{
+    text-align: center;
+    padding: 5px;
+    padding-bottom: 10px;
+    font-weight: 700;
+}
+
+.step-panel .add-button{
+    display: inline-block;
+    background-color: #BC4749;
+    color: white;
+    text-align: center;
+    gap: 10px;
+    padding: 10px 20px;
+    margin: 10px;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.step-panel .add-button:hover{
+    background-color: #d43033;
+}
+
+.step-list{
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.step-list .step{
+    display: flex;
+    align-items: start;
+    justify-content: center;
+}
+
+.step-list .step .index{
+    padding-right: 15px;
+    color: #BC4749;
+    font-size: 24px;
+    font-weight: 500;
+    text-align: right;
+    min-width: 50px;
+}
+
+.step-list .step textarea {
+    width: 100%;
+    resize: none;
+    overflow-y: hidden;
+}
+
+.step-list .step .remove{
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 35px;
+    min-width: 35px;
+    border-radius: 25px;
+    transition: all 0.2s ease;
+}
+
+.step-list .step .remove:hover{
+    background-color: #BC4749;
+    color: white;
+    box-shadow: 1px 3px 5px rgba(0,0,0,0.2);
 }
 
 /* Панель продуктів */
