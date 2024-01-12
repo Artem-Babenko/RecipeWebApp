@@ -8,8 +8,8 @@ namespace RecipeWebApp.Services;
 public class PhotoCleanupService : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
-    private const int CleanupIntervalSeconds = 15;
-    private const int MaxPhotoAgeSeconds = 30;
+    private const int CleanupIntervalSeconds = 30;
+    private const int MaxPhotoAgeSeconds = 30 * 60; // 30 хв
 
     /// <summary>
     /// Конструктор служби очистки тимчасових фотографій.
