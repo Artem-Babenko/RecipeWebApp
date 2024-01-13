@@ -1,0 +1,1297 @@
+openapi: 3.0.1
+info:
+  title: RecipeWebApp
+  version: '1.0'
+servers:
+- url: http://localhost:5252
+paths:
+  /categories:
+    get:
+      tags:
+        - Category
+      summary: Отримання списку усіх категорій
+      description: Цей ендпоінт обробляє HTTP GET-запит для отримання списку усіх категорій.
+      responses:
+        '200':
+          description: Список усіх категорій отриманий успішно.
+          content:
+            application/json:
+              example:
+                - id: 2,
+                  name: Другі страви
+                  parentCategoryId: null
+                  recipeCount: 3
+                  subcategories: []
+                - id: 3
+                  name: Страви з м'яса
+                  parentCategoryId: 2
+                  recipeCount: 3
+                  subcategories: []
+                - id: 4
+                  name: Перші страви
+                  parentCategoryId: null
+                  recipeCount: 5
+                  subcategories: []
+      security: []
+
+  /categories/main:
+    get:
+      tags:
+        - Category
+      summary: Отримання списку "Головних" категорій
+      description: Цей ендпоінт обробляє HTTP GET-запит для отримання списку "Головних" категорій.
+        Головні категорія - це категорії які на вершині дерева категорій. Вони не мають батьківської категорії.
+      responses:
+        '200':
+          description: Список "Головних" категорій отриманий успішно.
+          content:
+            application/json:
+              example:
+                - id: 1
+                  name: Другі страви
+                  parentCategoryId: null
+                  recipeCount: 7
+                  subcategories: []
+                - id: 2
+                  name: Салати
+                  parentCategoryId: null
+                  recipeCount: 3
+                  subcategories: []
+                - id: 3
+                  name: Перші страви
+                  parentCategoryId: null
+                  recipeCount: 5
+                  subcategories: []
+      security: []
+
+  /categories/{id}:
+    get:
+      tags:
+        - Category
+      summary: Отримання інформації про категорію, дочірні категорії та рецепти
+      description: |
+        Обробляє HTTP GET-запит для отримання інформації, що є у категорії: дочірні категорії та рецепти з усіх них.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          style: simple
+          description: Ідентифікатор категорії.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Успішно отримано інформацію про категорію, дочірні категорії та рецепти.
+          content:
+            application/json:
+              example:
+                category:
+                  id: 1
+                  name: Перші страви
+                  recipeCount: 3
+                  subcategories:
+                    - id: 7
+                      name: Гарячі супи
+                      recipeCount: 2
+                      subcategories: []
+                      parentCategoryId: 1
+                    - id: 8
+                      name: Холодні супи
+                      recipeCount: 1
+                      subcategories: []
+                      parentCategoryId: 1
+                    - id: 9
+                      name: Бульйони
+                      recipeCount: 0
+                      subcategories: []
+                      parentCategoryId: 1
+                  parentCategoryId: null
+                recipes:
+                  - id: 5
+                    name: Розсольник
+                    description: |-
+                      Розсольник по-домашньому – поживна перша страва, рецепт якої заснований на солоних огірках або огірковому розсолі. Цікаво, що раніше розсолом називали пиріг з куркою, гречаною кашею та порізаними вареними яйцями, а в начинку підливали розсіл. Цей рецепт розсольнику навіть згадував Гоголь у «Мертвих душах». Рецепт супу розсольник з’явився згодом – на огірковому розсолі, лимонному соку або капустяному розсолі.
+                
+                      Спочатку спробуємо, як приготувати розсольник з огірками за класичним рецептом з перловкою, а тоді вже будемо знати, як правильно варити розсольник з рисом і м’ясом або розсольник з грибами та перловкою. Цікаво буде спробувати інші варіанти: вегетаріанський розсольник – пісний рецепт, розсольник в мультиварці, розсольник з рибою, розсольник з фрикадельками. Смачний виходить розсольник за рецептом приготування з куркою та пшоном або гречкою.
+                    photoName: d2763a20-870e-4e74-8a46-928cf83b58bbrozsolnyk-1024x683.jpg
+                    difficulty: Легко
+                    views: 46
+                    cookingTime: '01:20:00'
+                    ingredients: []
+                    cookingSteps: []
+                    comments:
+                      - id: 3
+                        userName: Валентина
+                        title: Суп неймовірно смачнючий!!! Рекомендую всім)
+                        createTime: '2024-01-11T17:19:16.0210087'
+                        countOfLikes: 0
+                        rating: 5
+                        recipeId: 5
+                    createDate: '2024-01-11T17:11:42.3669228'
+                    user: null
+                    userId: 1
+                    category:
+                      id: 7
+                      name: Гарячі супи
+                      recipeCount: 2
+                      subcategories: []
+                      parentCategoryId: 1
+                    categoryId: 7
+                  - id: 6
+                    name: Суп харчо
+                    description: |-
+                      У різних областях Грузії готують суп харчо по-різному. Ми представляємо класичний грузинський рецепт супу харчо українською зі звичних для нашого столу інгредієнтів. Можна використовувати яловичину, якщо хочете суп харчо нежирний, баранину – харчо буде більш поживним та калорійним.
+                      Помідори у рецепті супу харчо додають необхідну кислість замість аличі. Або можна використовувати чорнослив чи гранатовий сік. І не варто забувати головний секрет, як приготувати суп харчо в домашніх умовах – пряних спецій і зелені не шкодувати.
+                    photoName: dfca8d85-b658-45fd-9cb1-62867d3357b4kharcho-1024x683.jpg
+                    difficulty: Складно
+                    views: 67
+                    cookingTime: '01:50:00'
+                    ingredients: []
+                    cookingSteps: []
+                    comments: []
+                    createDate: '2024-01-11T18:41:35.4600151'
+                    user: null
+                    userId: 1
+                    category:
+                      id: 7
+                      name: Гарячі супи
+                      recipeCount: 2
+                      subcategories: []
+                      parentCategoryId: 1
+                    categoryId: 7
+                  - id: 7
+                    name: Окрошка
+                    description: 'За класичним рецептом окрошку приготувати просто: накришити різні овочі, додати зелень і заправити квасом. Але сьогодні ж виявляється, до складу окрошки часто входять абсолютно нестандартні продукти. Не тільки зі ковбасою, а й з різним м''ясом, рибою, крабовими паличками та морепродуктами, сиром і грибами. Якщо хочеться вже зовсім чогось екзотичного, то окрошку можна заправити світлим пивом, сироваткою, бульйоном, розсолом або томатною пастою.'
+                    photoName: c662b22b-88f3-4fd5-bc40-c252049b8fccokroshka-768x512.jpg
+                    difficulty: Легко
+                    views: 33
+                    cookingTime: '00:30:00'
+                    ingredients: []
+                    cookingSteps: []
+                    comments:
+                      - id: 8
+                        userName: Степан
+                        title: Ну на любителя
+                        createTime: '2024-01-12T14:09:08.7519678'
+                        countOfLikes: 0
+                        rating: 3
+                        recipeId: 7
+                      - id: 9
+                        userName: Тарас
+                        title: Це взагалі російська кухня:( Навіть не буду куштувати!
+                        createTime: '2024-01-12T14:09:34.7749952'
+                        countOfLikes: 0
+                        rating: 2
+                        recipeId: 7
+                    createDate: '2024-01-11T19:00:41.1732152'
+                    user: null
+                    userId: 1
+                    category:
+                      id: 8
+                      name: Холодні супи
+                      recipeCount: 1
+                      subcategories: []
+                      parentCategoryId: 1
+                    categoryId: 8
+        '404':
+          description: Категорію не знайдено.
+      security: []
+
+  /categories/last:
+    get:
+      tags:
+        - Category
+      summary: Отримання списку "Останніх" категорій
+      description: Обробляє HTTP GET-запит для отримання списоку категорій, які є найнижчими у дереві категорій.  Саме вони призначенні для того, щоб містити рецепти.
+      responses:
+        '200':
+          description: Успішне отримання списку категорій, які без дочірніх категорій.
+          content: 
+            application/json:
+              example:
+                - id: 10
+                  name: Страви з м'яса
+                  recipeCount: 0
+                  subcategories: []
+                  parentCategoryId: 2
+                - id: 11
+                  name: Страви з риби
+                  recipeCount: 0
+                  subcategories: []
+                  parentCategoryId: 2
+                - id: 14
+                  name: Гарнір
+                  recipeCount: 0
+                  subcategories: []
+                  parentCategoryId: 2
+                - id: 7
+                  name: Гарячі супи
+                  recipeCount: 0
+                  subcategories: []
+                  parentCategoryId: 1
+      security: []
+      
+  /:
+    get:
+      tags:
+        - Page
+      summary: Отримання головної сторінки.
+      description: Обробляє HTTP GET-запит для отримання головної сторінки.
+      responses:
+        '200':
+          description: Успішне отримання головної сторінки.
+      security: []
+
+  /recipe:
+    get:
+      tags:
+        - Page
+      summary: Отримання сторінки інформації про рецепт
+      description: Обробляє HTTP GET-запит для отримання сторінки рецепта.
+      responses:
+        '200':
+          description: Успішне отримання сторінки з рецептом.
+      security: []
+
+  /login:
+    get:
+      tags:
+        - Page
+      summary: Отримання сторінки входу 
+      description: Обробляє HTTP GET-запит для отримання сторінки входу в акаунт.
+      responses:
+        '200':
+          description: Успішне отримання сторінки входу.
+      security: []
+
+  /registration:
+    get:
+      tags:
+        - Page
+      summary: Отримання сторінки реєстрації
+      description: Обробляє HTTP GET-запит для отримання сторінки реєстрації акаунту.
+      responses:
+        '200':
+          description: Успішне отримання сторінки реєстрації.
+      security: []
+
+  /profile:
+    get:
+      tags:
+        - Page
+      summary: Отримання сторінки профілю користувача
+      description: Обробляє HTTP GET-запит для отримання сторінки профілю користувача.
+      responses:
+        '200':
+          description: Успішне отримання сторінки профілю користувача.
+
+  /create:
+    get:
+      tags:
+        - Page
+      summary: Отримання сторінки для створення рецепта
+      description: Обробляє HTTP GET-запит для отримання сторінки створення рецепта.
+      responses:
+        '200':
+          description: Успішне отримання сторінки створення рецепта.
+          
+  /edit:
+    get:
+      tags:
+        - Page
+      summary: Отримання сторінки редагування рецепта
+      description: Обробляє HTTP GET-запит для отримання сторінки редагування рецепта.
+      responses:
+        '200':
+          description: Успішне отримання сторінки редагування рецепта.
+
+  /products:
+    get:
+      tags:
+        - Product
+      summary: Отримання списку всіх продуктів
+      description: Обробляє HTTP GET-запит для отримання списку всіх продуктів. Якщо властивість Weight має значення null - то кількість є вагою у грамах, а якщо властивість має дані - то вага у грамах буде у цій властивості. 
+      responses:
+        '200':
+          description: Успішне отримання спуску всіх продуктів.
+          content: 
+            application/json: 
+              example:
+                - id: 1
+                  name: Філе минтая
+                  amount: 100
+                  weight: null
+                  unit: г
+                  calories: 72
+                  proteins: 16
+                  carbohydrate: 0
+                  fats: 1
+                - id: 2
+                  name: Білий хліб
+                  amount: 100
+                  weight: null
+                  unit: г
+                  calories: 257
+                  proteins: 7.7
+                  carbohydrate: 52
+                  fats: 1
+                - id: 3
+                  name: Молоко 2.5%
+                  amount: 100
+                  weight: null
+                  unit: мл
+                  calories: 51
+                  proteins: 3
+                  carbohydrate: 4.7
+                  fats: 2.5
+                - id: 4
+                  name: Яйце куряче
+                  amount: 1
+                  weight: 55
+                  unit: шт
+                  calories: 83
+                  proteins: 7
+                  carbohydrate: 0.5
+                  fats: 6
+      security: []
+
+  /recipes:
+    get:
+      tags:
+        - Recipe
+      summary: Отримання списку усіх рецептів
+      description: Обробляє HTTP GET-запит для отримання рецептів. Включаючи у себе коментарі до рецепта та його категорію.
+      responses:
+        '200':
+          description: Успішне оптимання списку рецептів.
+          content: 
+            application/json:
+              example:
+                - id: 4
+                  name: Рибні котлети
+                  description: Рибні котлети – це ароматна, неймовірно смачна та дієтична страва. Вони на тривалий час насичують організм, ідеально поєднується з різноманітними гарнірами та соусами. Ніжні рибні котлети стануть чудовою альтернативою звичайній смаженій рибі.
+                  photoName: rybni-kotlety.jpg
+                  difficulty: Нормально
+                  views: 32
+                  cookingTime: '01:00:00'
+                  ingredients: []
+                  cookingSteps: []
+                  comments:
+                    - id: 1
+                      userName: Олег
+                      title: Все вийшло, рецепт дуже класний, раджу всім!
+                      createTime: '2024-01-11T17:08:09.7597136'
+                      countOfLikes: 0
+                      rating: 5
+                      recipeId: 4
+                    - id: 2
+                      userName: Катерина
+                      title: Спочатку трішки не вийшло з чисткою риби, але потім все зробила так як треба, чоловіку дуже сподобалось:)
+                      createTime: '2024-01-11T17:08:09.759719'
+                      countOfLikes: 0
+                      rating: 4
+                      recipeId: 4
+                  createDate: '2024-01-11T17:08:09.7597221'
+                  user: null
+                  userId: 1
+                  category:
+                    id: 11
+                    name: Страви з риби
+                    recipeCount: 0
+                    subcategories: []
+                    parentCategoryId: 2
+                  categoryId: 11
+                - id: 5
+                  name: Розсольник
+                  description: |-
+                    Розсольник по-домашньому – поживна перша страва, рецепт якої заснований на солоних огірках або огірковому розсолі. Цікаво, що раніше розсолом називали пиріг з куркою, гречаною кашею та порізаними вареними яйцями, а в начинку підливали розсіл. Цей рецепт розсольнику навіть згадував Гоголь у «Мертвих душах». Рецепт супу розсольник з’явився згодом – на огірковому розсолі, лимонному соку або капустяному розсолі.
+                  
+                    Спочатку спробуємо, як приготувати розсольник з огірками за класичним рецептом з перловкою, а тоді вже будемо знати, як правильно варити розсольник з рисом і м’ясом або розсольник з грибами та перловкою. Цікаво буде спробувати інші варіанти: вегетаріанський розсольник – пісний рецепт, розсольник в мультиварці, розсольник з рибою, розсольник з фрикадельками. Смачний виходить розсольник за рецептом приготування з куркою та пшоном або гречкою.
+                  photoName: d2763a20-870e-4e74-8a46-928cf83b58bbrozsolnyk-1024x683.jpg
+                  difficulty: Легко
+                  views: 46
+                  cookingTime: '01:20:00'
+                  ingredients: []
+                  cookingSteps: []
+                  comments:
+                    - id: 3
+                      userName: Валентина
+                      title: Суп неймовірно смачнючий!!! Рекомендую всім)
+                      createTime: '2024-01-11T17:19:16.0210087'
+                      countOfLikes: 0
+                      rating: 5
+                      recipeId: 5
+                  createDate: '2024-01-11T17:11:42.3669228'
+                  user: null
+                  userId: 1
+                  category:
+                    id: 7
+                    name: Гарячі супи
+                    recipeCount: 0
+                    subcategories: []
+                    parentCategoryId: 1
+                  categoryId: 7
+      security: []
+    post:
+      tags:
+        - Recipe
+      summary: Надсилання моделі рецепта для його створення
+      description: Обробляє HTTP POST-запит для надсилання моделі рецепта для його створення.
+      requestBody:
+        description: Приклад моделі рецепту для створення.
+        required: true
+        content:
+          application/json:
+            example:
+              name: Тестовий рецепт
+              photoName: e8291ef7-befd-4e2b-b93c-cd95dc0f0e69rybni-kotlety.jpg
+              category: Морозиво
+              cookingTime: 45
+              difficulty: Складно
+              description: Опис рецепту створеного для тестування.
+              ingredients:
+                - id: 10
+                  amount: '1000'
+                - id: 3
+                  amount: '500'
+                - id: 55
+                  amount: '200'
+              cookingSteps:
+                - stepIndex: 1
+                  title: Перший крок приготування.
+                - stepIndex: 2
+                  title: Другий крок приготування.
+                - stepIndex: 3
+                  title: Третій крок приготування.
+              
+      responses:
+        '200':
+          description: Успіше створення рецепта.
+        '400':
+          description: Некоректна модель рецепта у запиті для створення.
+    put:
+      tags:
+        - Recipe
+      summary: Надсилання моделі рецепта для оновлення його даних
+      description: Обробляє HTTP POST-запит для надсилання моделі рецепта для його отовлення у базі даних. Редагування рецепту.
+      requestBody:
+        description: Приклад моделі рецепта для оновлення. Обов'язкова наявність властивості "id" вже існуючого рецепта.
+        required: true
+        content:
+          application/json:
+            example:
+              id: 11
+              name: Скумбрія, запечена у фользі
+              photoName: 10cf65da-613f-4e67-abee-987ec18ee195skumbria-1024x683.jpg
+              category: Страви з риби
+              difficulty: Легко
+              cookingTime: 45
+              description: Приготувати скумбрію запечену найкраще в рукаві або у фользі. Саме запечена скумбрія, на відміну від інших способів приготування цієї риби, вирізняється приголомшливими смаковими характеристиками.
+              ingredients:
+                - id: 50
+                  amount: 2
+                - id: 27
+                  amount: 150
+                - id: 51
+                  amount: 0.5
+                - id: 6
+                  amount: 2
+                - id: 7
+                  amount: 0
+              cookingSteps:
+                - id: 68
+                  stepIndex: 1
+                  title: У риби відрізаємо голову, розрізаємо черевце, виймаємо нутрощі та промиваємо. Просушуємо серветками.
+                  recipeId: 11
+                - id: 69
+                  stepIndex: 2
+                  title: Лимон миємо, нарізаємо тонкими кружечками.
+                  recipeId: 11
+                - id: 70
+                  stepIndex: 3
+                  title: Помідор миємо, нарізаємо кружальцями або пів кружальцями.
+                  recipeId: 11
+                - id: 71
+                  stepIndex: 4
+                  title: На рибі зробимо кілька надрізів. Посолимо, поперчимо, у кожен надріз вкладемо по шматочку помідора та лимона.
+                  recipeId: 11
+                - id: 72
+                  stepIndex: 5
+                  title: Викладаємо скумбрію на фольгу, рясно змащуємо олією. Загортаємо у фольгу.
+                  recipeId: 11
+                - id: 73
+                  stepIndex: 6
+                  title: Викладаємо рибу на деко та запікаємо у заздалегідь розігрітій духовці протягом 25-30 хвилин за температури 190°С.
+                  recipeId: 11
+                - id: 74
+                  stepIndex: 7
+                  title: Скумбрія, запечена у фользі, готова. Подавати можна гарячою та холодною, з улюбленим гарніром.
+                  recipeId: 11
+      responses:
+        '200':
+          description: Успішне оновлення даних рецепта.
+        '400':
+          description: Невірна модель у запиті або відсутність рецепта за вказаним ідентифікатором.
+
+  /recipes/{id}:
+    get:
+      tags:
+        - Recipe
+      summary: Отримання рецепту за його ідентифікатором
+      description: "Обробляє HTTP GET-запит для отримання рецепта за ідентифікатором. У об'єкт рецепту включені всі його об'єкти: інгредієнти, категорія, кроки приготування, коментарі та власник рецепту."
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Ідентифікатор рецепта.
+          style: simple
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Успішне отримання рецепту за ідентифікатором.
+          content:
+            application/json: 
+              example:
+                id: 10
+                name: Макарони по-флотськи
+                description: Макарони по-флотськи – це проста й апетитна страва. Якщо немає часу на готування, макарони по-флотськи – це ваш варіант смачно та ситно нагодувати родину. Для приготування використовують різний фарш, усе залежить від ваших уподобань.
+                photoName: 31fb673d-f451-426a-b1af-73ca0ada9d2fmakarony-po-flotsky-1024x683.jpg
+                difficulty: Легко
+                views: 46
+                cookingTime: '00:35:00'
+                ingredients:
+                  - id: 84
+                    product:
+                      id: 44
+                      name: Макарони
+                      amount: 1
+                      weight: 100
+                      unit: скл.
+                      calories: 344
+                      proteins: 10.4
+                      carbohydrate: 71.5
+                      fats: 1.1
+                    productId: 44
+                    amount: 4
+                    recipeId: 10
+                  - id: 85
+                    product:
+                      id: 49
+                      name: Фарш курячий
+                      amount: 100
+                      weight: null
+                      unit: г
+                      calories: 143
+                      proteins: 17.4
+                      carbohydrate: 0
+                      fats: 8
+                    productId: 49
+                    amount: 500
+                    recipeId: 10
+                  - id: 86
+                    product:
+                      id: 5
+                      name: Цибуля ріпчаста
+                      amount: 1
+                      weight: 70
+                      unit: шт
+                      calories: 43
+                      proteins: 1.5
+                      carbohydrate: 9
+                      fats: 0.25
+                    productId: 5
+                    amount: 2
+                    recipeId: 10
+                  - id: 87
+                    product:
+                      id: 13
+                      name: Морква
+                      amount: 1
+                      weight: 85
+                      unit: шт
+                      calories: 35
+                      proteins: 1
+                      carbohydrate: 7.3
+                      fats: 0.2
+                    productId: 13
+                    amount: 1
+                    recipeId: 10
+                  - id: 88
+                    product:
+                      id: 6
+                      name: Олія соняшникова
+                      amount: 1
+                      weight: 12
+                      unit: ст. л.
+                      calories: 108
+                      proteins: 0.01
+                      carbohydrate: 0.01
+                      fats: 12
+                    productId: 6
+                    amount: 5
+                    recipeId: 10
+                  - id: 89
+                    product:
+                      id: 7
+                      name: Сіль, чорний перець
+                      amount: 0
+                      weight: null
+                      unit: null
+                      calories: 0
+                      proteins: 0
+                      carbohydrate: 0
+                      fats: 0
+                    productId: 7
+                    amount: 0
+                    recipeId: 10
+                cookingSteps:
+                  - id: 60
+                    stepIndex: 1
+                    title: Перекладаємо фарш на розігріту з олією сковорідку. Солимо та перчимо. Готуємо за помірного нагрівання, час від часу перевертаючи.
+                    recipeId: 10
+                  - id: 61
+                    stepIndex: 2
+                    title: Цибулю очищаємо та нарізаємо кубиками.
+                    recipeId: 10
+                  - id: 62
+                    stepIndex: 3
+                    title: Коли фарш посвітліє, додаємо до нього подрібнену цибулю.
+                    recipeId: 10
+                  - id: 63
+                    stepIndex: 4
+                    title: Моркву натираємо теркою і перекладаємо у сковорідку. Періодично перевертаючи, готуємо до повної готовності.
+                    recipeId: 10
+                  - id: 64
+                    stepIndex: 5
+                    title: Відварюємо макарони. У воду попередньо наллємо 1-2 столові ложки олії.
+                    recipeId: 10
+                  - id: 65
+                    stepIndex: 6
+                    title: Готові макарони відкидаємо на друшляк та перекладаємо у велику миску. Додаємо до макаронів по-флотськи м'ясну засмажку та перемішуємо.
+                    recipeId: 10
+                  - id: 66
+                    stepIndex: 7
+                    title: Перекладаємо макарони по-флотськи у сковорідку та прогріваємо усе разом приблизно 5-7 хвилин.
+                    recipeId: 10
+                  - id: 67
+                    stepIndex: 8
+                    title: Подаємо з зеленню, кетчупом або гірчицею.
+                    recipeId: 10
+                comments: []
+                createDate: '2024-01-12T09:25:05.924034'
+                user:
+                  id: 1
+                  name: Артем
+                  surname: Бабенко
+                  email: artem@gmail.com
+                  password: '123123123'
+                  age: 43
+                  gender: male
+                userId: 1
+                category:
+                  id: 15
+                  name: Паста
+                  recipeCount: 0
+                  subcategories: []
+                  parentCategoryId: 2
+                categoryId: 15
+                
+      security: []
+    delete:
+      tags:
+        - Recipe
+      summary: Видалення рецепта за його ідентифікатором
+      description: Обробляє HTTP DELETE-запит для видалення рецепта за ідентифікатором. Також видалення його фото.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          style: simple
+          description: Ідентифікатор рецепта, який треба видалити.
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Ушпішне видалення рецепта.
+        '404': 
+          description: Рецепт не знайдено.
+
+  /recipe/comments/{recipeId}:
+    post:
+      tags:
+        - Recipe
+      summary: Надсилання та створення коментаря для рецепта
+      description: Обробляє HTTP POST-запит для надсилання та створення коментаря. 
+      parameters:
+        - name: recipeId
+          in: path
+          required: true
+          description: Ідентифікатор рецепта, якому буде доданий коментар.
+          style: simple
+          schema:
+            type: integer
+            format: int32
+      requestBody:
+        description: Об'єкт коментар. 
+        required: true
+        content: 
+          application/json:
+            example:
+              userName: Артем
+              title: Ця паста справила на мене дуже приємне враження.
+              rating: '5'
+      responses:
+        '200':
+          description: Успішне додавання коментаря.
+        '400':
+          description: Невірне тіло запиту або не знайдено рецепт якому додавати коментар.
+      security: []
+
+  /recipes/photo:
+    post:
+      tags:
+        - Recipe
+      summary: Завантаження фото для рецепта
+      description: Обробляє HTTP POST-запит для завантаження фото страви.
+      requestBody:
+        description: |
+            Об'єкт FormData з фотографією яку треба додати.
+            Приклад:
+        
+            const data = new FormData();
+            
+            data.append('FileName', document.getElementById('photo').value);
+            
+            data.append('Image', document.getElementById('photo').files[0]);
+        
+            const response = await fetch('/recipes/photo', {
+                method: "POST",
+                body: data
+            });
+        content:
+          formData:
+            example: |
+              ------WebKitFormBoundaryguXfM809s1UnkEsH
+              Content-Disposition: form-data; name="FileName"
+              
+              C:\fakepath\rybni-kotlety.jpg
+              ------WebKitFormBoundaryguXfM809s1UnkEsH
+              Content-Disposition: form-data; name="Image"; filename="rybni-kotlety.jpg"
+              Content-Type: image/jpeg
+              
+              
+              ------WebKitFormBoundaryguXfM809s1UnkEsH--              
+      responses:
+        '200':
+          description: Успішне завантаження фото на сервер. Властивість fileName - ім'я файлу у папці ../photos/*
+          content: 
+            application/json:
+              example:
+                fileName: f7ebdad6-4589-4e32-b81b-51443b9886b4rybni-kotlety.jpg
+                
+  /user/login:
+    post:
+      tags:
+        - User
+      summary: Надсилання запиту на вхід в акаунт
+      description: Обробляє HTTP POST-запит надсилання даних користувача для входу. Створення аутентифікаційних кук для користувача.
+      requestBody:
+        description: Об'єкт даних для запиту на вхід.
+        required: true
+        content: 
+          application/json:
+            example:
+              email: artem@gmail.com
+              password: '123123123'
+      responses:
+        '200':
+          description: Успішний вхід в акаунт та успішне створення аутентифікаційних кук.
+        '400':
+          description: Невірна модель даних для входу.
+        '401': 
+          description: Користувач незареєстрований.
+      security: []
+
+  /user/logout:
+    get:
+      tags:
+        - User
+      summary: Вихід з акаунту
+      description: Обробляє HTTP GET-запит для видалення аутентифікаційних кук. Перехід на головну сторінку.
+      responses:
+        '200':
+          description: Усішний вихід з акаунту та видалення аутентифікаційних кук.
+      security: []
+
+  /user/registration:
+    post:
+      tags:
+        - User
+      summary: Надсилання реєстраційних даних нового користувача
+      description: Обробляє HTTP POST-запит для надсилання реєстраційних даних користувача. Додає користувача до бази даних та створює аутентифікаційні куки. Перехід на головну сторінку.
+      requestBody:
+        description: Об'єкт реєстраційних даних.
+        required: true
+        content:
+          application/json: 
+            example:
+              name: Артем
+              surname: Бабенко
+              email: testemail@gmail.com
+              password: '987987987'
+      responses:
+        '200':
+          description: Успішне створення акаунту та вхід у нього.
+        '400': 
+          description: Невірне тіло запиту.
+      security: []
+  
+  /user:
+    get:
+      tags:
+        - User
+      summary: Отримання даних про користувача
+      description: Обробляє HTTP GET-запит для отримання поточного користувача з його усіма даними.
+      responses:
+        '200':
+          description: Успішне отримання даних про користувача. Сategories - це категорії у яких користувач створив рецепти. Recipes - це рецепти, які створив користувач.
+          content: 
+            application/json:
+              example:
+                user:
+                  id: 1
+                  name: Артем
+                  surname: Бабенко
+                  email: artem@gmail.com
+                  password: '123123123'
+                  age: 43
+                  gender: male
+                categories:
+                  - category:
+                      id: 11
+                      name: Страви з риби
+                      recipeCount: 0
+                      subcategories: []
+                      parentCategoryId: 2
+                    recipeCount: 2
+                  - category:
+                      id: 7
+                      name: Гарячі супи
+                      recipeCount: 0
+                      subcategories: []
+                      parentCategoryId: 1
+                    recipeCount: 2
+                  - category:
+                      id: 8
+                      name: Холодні супи
+                      recipeCount: 0
+                      subcategories: []
+                      parentCategoryId: 1
+                    recipeCount: 1
+                  - category:
+                      id: 10
+                      name: Страви з м'яса
+                      recipeCount: 0
+                      subcategories: []
+                      parentCategoryId: 2
+                    recipeCount: 3
+                  - category:
+                      id: 16
+                      name: Запіканки
+                      recipeCount: 0
+                      subcategories: []
+                      parentCategoryId: 2
+                    recipeCount: 1
+                  - category:
+                      id: 15
+                      name: Паста
+                      recipeCount: 0
+                      subcategories: []
+                      parentCategoryId: 2
+                    recipeCount: 1
+                totalComments: 10
+                recipes:
+                  - id: 4
+                    name: Рибні котлети
+                    description: Рибні котлети – це ароматна, неймовірно смачна та дієтична страва. Вони на тривалий час насичують організм, ідеально поєднується з різноманітними гарнірами та соусами. Ніжні рибні котлети стануть чудовою альтернативою звичайній смаженій рибі.
+                    photoName: rybni-kotlety.jpg
+                    difficulty: Нормально
+                    views: 33
+                    cookingTime: '01:00:00'
+                    ingredients: []
+                    cookingSteps: []
+                    comments:
+                      - id: 1
+                        userName: Олег
+                        title: Все вийшло, рецепт дуже класний, раджу всім!
+                        createTime: '2024-01-11T17:08:09.7597136'
+                        countOfLikes: 0
+                        rating: 5
+                        recipeId: 4
+                      - id: 2
+                        userName: Катерина
+                        title: Спочатку трішки не вийшло з чисткою риби, але потім все зробила так як треба, чоловіку дуже сподобалось:)
+                        createTime: '2024-01-11T17:08:09.759719'
+                        countOfLikes: 0
+                        rating: 4
+                        recipeId: 4
+                      - id: 4
+                        userName: Василь
+                        title: Ну мені дуже сильно зайшли ці котлети, я б сказав "зі свисом" ;)))
+                        createTime: '2024-01-11T18:51:01.5678819'
+                        countOfLikes: 0
+                        rating: 5
+                        recipeId: 4
+                    createDate: '2024-01-11T17:08:09.7597221'
+                    user:
+                      id: 1
+                      name: Артем
+                      surname: Бабенко
+                      email: artem@gmail.com
+                      password: '123123123'
+                      age: 43
+                      gender: male
+                    userId: 1
+                    category:
+                      id: 11
+                      name: Страви з риби
+                      recipeCount: 0
+                      subcategories: []
+                      parentCategoryId: 2
+                    categoryId: 11
+                  - id: 5
+                    name: Розсольник
+                    description: |-
+                      Розсольник по-домашньому – поживна перша страва, рецепт якої заснований на солоних огірках або огірковому розсолі. Цікаво, що раніше розсолом називали пиріг з куркою, гречаною кашею та порізаними вареними яйцями, а в начинку підливали розсіл. Цей рецепт розсольнику навіть згадував Гоголь у «Мертвих душах». Рецепт супу розсольник з’явився згодом – на огірковому розсолі, лимонному соку або капустяному розсолі.
+                
+                      Спочатку спробуємо, як приготувати розсольник з огірками за класичним рецептом з перловкою, а тоді вже будемо знати, як правильно варити розсольник з рисом і м’ясом або розсольник з грибами та перловкою. Цікаво буде спробувати інші варіанти: вегетаріанський розсольник – пісний рецепт, розсольник в мультиварці, розсольник з рибою, розсольник з фрикадельками. Смачний виходить розсольник за рецептом приготування з куркою та пшоном або гречкою.
+                    photoName: d2763a20-870e-4e74-8a46-928cf83b58bbrozsolnyk-1024x683.jpg
+                    difficulty: Легко
+                    views: 46
+                    cookingTime: '01:20:00'
+                    ingredients: []
+                    cookingSteps: []
+                    comments:
+                      - id: 3
+                        userName: Валентина
+                        title: Суп неймовірно смачнючий!!! Рекомендую всім)
+                        createTime: '2024-01-11T17:19:16.0210087'
+                        countOfLikes: 0
+                        rating: 5
+                        recipeId: 5
+                    createDate: '2024-01-11T17:11:42.3669228'
+                    user:
+                      id: 1
+                      name: Артем
+                      surname: Бабенко
+                      email: artem@gmail.com
+                      password: '123123123'
+                      age: 43
+                      gender: male
+                    userId: 1
+                    category:
+                      id: 7
+                      name: Гарячі супи
+                      recipeCount: 0
+                      subcategories: []
+                      parentCategoryId: 1
+                    categoryId: 7
+                  - id: 6
+                    name: Суп харчо
+                    description: |-
+                      У різних областях Грузії готують суп харчо по-різному. Ми представляємо класичний грузинський рецепт супу харчо українською зі звичних для нашого столу інгредієнтів. Можна використовувати яловичину, якщо хочете суп харчо нежирний, баранину – харчо буде більш поживним та калорійним.
+                      Помідори у рецепті супу харчо додають необхідну кислість замість аличі. Або можна використовувати чорнослив чи гранатовий сік. І не варто забувати головний секрет, як приготувати суп харчо в домашніх умовах – пряних спецій і зелені не шкодувати.
+                    photoName: dfca8d85-b658-45fd-9cb1-62867d3357b4kharcho-1024x683.jpg
+                    difficulty: Складно
+                    views: 67
+                    cookingTime: '01:50:00'
+                    ingredients: []
+                    cookingSteps: []
+                    comments: []
+                    createDate: '2024-01-11T18:41:35.4600151'
+                    user:
+                      id: 1
+                      name: Артем
+                      surname: Бабенко
+                      email: artem@gmail.com
+                      password: '123123123'
+                      age: 43
+                      gender: male
+                    userId: 1
+                    category:
+                      id: 7
+                      name: Гарячі супи
+                      recipeCount: 0
+                      subcategories: []
+                      parentCategoryId: 1
+                    categoryId: 7
+                  - id: 7
+                    name: Окрошка
+                    description: 'За класичним рецептом окрошку приготувати просто: накришити різні овочі, додати зелень і заправити квасом. Але сьогодні ж виявляється, до складу окрошки часто входять абсолютно нестандартні продукти. Не тільки зі ковбасою, а й з різним м''ясом, рибою, крабовими паличками та морепродуктами, сиром і грибами. Якщо хочеться вже зовсім чогось екзотичного, то окрошку можна заправити світлим пивом, сироваткою, бульйоном, розсолом або томатною пастою.'
+                    photoName: c662b22b-88f3-4fd5-bc40-c252049b8fccokroshka-768x512.jpg
+                    difficulty: Легко
+                    views: 34
+                    cookingTime: '00:30:00'
+                    ingredients: []
+                    cookingSteps: []
+                    comments:
+                      - id: 8
+                        userName: Степан
+                        title: Ну на любителя
+                        createTime: '2024-01-12T14:09:08.7519678'
+                        countOfLikes: 0
+                        rating: 3
+                        recipeId: 7
+                      - id: 9
+                        userName: Тарас
+                        title: Це взагалі російська кухня:( Навіть не буду куштувати!
+                        createTime: '2024-01-12T14:09:34.7749952'
+                        countOfLikes: 0
+                        rating: 2
+                        recipeId: 7
+                    createDate: '2024-01-11T19:00:41.1732152'
+                    user:
+                      id: 1
+                      name: Артем
+                      surname: Бабенко
+                      email: artem@gmail.com
+                      password: '123123123'
+                      age: 43
+                      gender: male
+                    userId: 1
+                    category:
+                      id: 8
+                      name: Холодні супи
+                      recipeCount: 0
+                      subcategories: []
+                      parentCategoryId: 1
+                    categoryId: 8
+                  - id: 8
+                    name: Курячі котлети
+                    description: Для приготування рублених курячих котлет філе нарізають шматочками, а не подрібнюють на фарш. Але при цьому рублені курячі котлети добре тримають форму завдяки борошну та печерицям.
+                    photoName: c5d24a20-01c2-47a6-b853-183f7520e069rubleni-kotlety-1024x683.jpg
+                    difficulty: Нормально
+                    views: 52
+                    cookingTime: '00:45:00'
+                    ingredients: []
+                    cookingSteps: []
+                    comments: []
+                    createDate: '2024-01-12T09:04:21.8547583'
+                    user:
+                      id: 1
+                      name: Артем
+                      surname: Бабенко
+                      email: artem@gmail.com
+                      password: '123123123'
+                      age: 43
+                      gender: male
+                    userId: 1
+                    category:
+                      id: 10
+                      name: Страви з м'яса
+                      recipeCount: 0
+                      subcategories: []
+                      parentCategoryId: 2
+                    categoryId: 10
+                  - id: 9
+                    name: Запіканка з макаронів
+                    description: Просто макарони з овочами або зі смаженими грибами – одноманітно та не дуже цікаво. Приготуємо смачну запіканку з макаронів з сиром, куркою, грибами та овочами – чудовий обід або вечеря.
+                    photoName: 56494ac5-c5c8-488e-b585-5348200b07eczapikanka-1024x683.jpg
+                    difficulty: Складно
+                    views: 76
+                    cookingTime: '01:00:00'
+                    ingredients: []
+                    cookingSteps: []
+                    comments: []
+                    createDate: '2024-01-12T09:20:14.2430165'
+                    user:
+                      id: 1
+                      name: Артем
+                      surname: Бабенко
+                      email: artem@gmail.com
+                      password: '123123123'
+                      age: 43
+                      gender: male
+                    userId: 1
+                    category:
+                      id: 16
+                      name: Запіканки
+                      recipeCount: 0
+                      subcategories: []
+                      parentCategoryId: 2
+                    categoryId: 16
+                  - id: 10
+                    name: Макарони по-флотськи
+                    description: Макарони по-флотськи – це проста й апетитна страва. Якщо немає часу на готування, макарони по-флотськи – це ваш варіант смачно та ситно нагодувати родину. Для приготування використовують різний фарш, усе залежить від ваших уподобань.
+                    photoName: 31fb673d-f451-426a-b1af-73ca0ada9d2fmakarony-po-flotsky-1024x683.jpg
+                    difficulty: Легко
+                    views: 46
+                    cookingTime: '00:35:00'
+                    ingredients: []
+                    cookingSteps: []
+                    comments:
+                      - id: 10
+                        userName: Артем
+                        title: Ця паста справила на мене дуже приємне враження.
+                        createTime: '2024-01-13T12:59:37.0661438'
+                        countOfLikes: 0
+                        rating: 5
+                        recipeId: 10
+                    createDate: '2024-01-12T09:25:05.924034'
+                    user:
+                      id: 1
+                      name: Артем
+                      surname: Бабенко
+                      email: artem@gmail.com
+                      password: '123123123'
+                      age: 43
+                      gender: male
+                    userId: 1
+                    category:
+                      id: 15
+                      name: Паста
+                      recipeCount: 0
+                      subcategories: []
+                      parentCategoryId: 2
+                    categoryId: 15
+                  - id: 11
+                    name: Скумбрія, запечена у фользі
+                    description: Приготувати скумбрію запечену найкраще в рукаві або у фользі. Саме запечена скумбрія, на відміну від інших способів приготування цієї риби, вирізняється приголомшливими смаковими характеристиками.
+                    photoName: 10cf65da-613f-4e67-abee-987ec18ee195skumbria-1024x683.jpg
+                    difficulty: Легко
+                    views: 9
+                    cookingTime: '00:45:00'
+                    ingredients: []
+                    cookingSteps: []
+                    comments: []
+                    createDate: '2024-01-12T09:43:32.5432743'
+                    user:
+                      id: 1
+                      name: Артем
+                      surname: Бабенко
+                      email: artem@gmail.com
+                      password: '123123123'
+                      age: 43
+                      gender: male
+                    userId: 1
+                    category:
+                      id: 11
+                      name: Страви з риби
+                      recipeCount: 0
+                      subcategories: []
+                      parentCategoryId: 2
+                    categoryId: 11
+                  - id: 12
+                    name: Котлети з яловичини у духовці
+                    description: Дізнайтеся про переваги запікання котлет у духовці і про те, як зробити їх дуже соковитими та неймовірно смачними. Сподіваємося, що вам стане у пригоді наш простий рецепт котлет у духовці, приготування яких забере у вас небагато часу та сил.
+                    photoName: 1420ba6f-23a4-4a16-b6fc-43d2eda8a3a5kotlety-v-duhovci-1024x683.jpg
+                    difficulty: Нормально
+                    views: 3
+                    cookingTime: '00:50:00'
+                    ingredients: []
+                    cookingSteps: []
+                    comments:
+                      - id: 7
+                        userName: Софія
+                        title: Класний рецепт, але чогось не вистачає
+                        createTime: '2024-01-12T14:08:27.78879'
+                        countOfLikes: 0
+                        rating: 4
+                        recipeId: 12
+                    createDate: '2024-01-12T13:46:57.0487591'
+                    user:
+                      id: 1
+                      name: Артем
+                      surname: Бабенко
+                      email: artem@gmail.com
+                      password: '123123123'
+                      age: 43
+                      gender: male
+                    userId: 1
+                    category:
+                      id: 10
+                      name: Страви з м'яса
+                      recipeCount: 0
+                      subcategories: []
+                      parentCategoryId: 2
+                    categoryId: 10
+                  - id: 13
+                    name: Свинячі медальйони з гірчицею
+                    description: Свинячі медальйони, справжня святкова страва, яку нескладно приготувати у каструлі або на сковороді. Для цієї страви не потрібні особливі хитрощі та складні кулінарні техніки. Головне завдання - не пересушити м'ясо, зберегти м'якість волокон і підібрати відповідний супровід. У цьому рецепті приготуємо медальйони з гірчицею.
+                    photoName: a5863092-bb92-4faf-94f4-6c45c4514d71svynyacha-grudka-1024x683.jpg
+                    difficulty: Нормально
+                    views: 2
+                    cookingTime: '01:05:00'
+                    ingredients: []
+                    cookingSteps: []
+                    comments:
+                      - id: 5
+                        userName: Артем Бабенко
+                        title: Якось замало вуглеводів
+                        createTime: '2024-01-12T14:07:22.8544639'
+                        countOfLikes: 0
+                        rating: 3
+                        recipeId: 13
+                      - id: 6
+                        userName: Олег
+                        title: Напевне варто було б додати більше приправ
+                        createTime: '2024-01-12T14:07:51.5752615'
+                        countOfLikes: 0
+                        rating: 3
+                        recipeId: 13
+                    createDate: '2024-01-12T14:06:29.4934898'
+                    user:
+                      id: 1
+                      name: Артем
+                      surname: Бабенко
+                      email: artem@gmail.com
+                      password: '123123123'
+                      age: 43
+                      gender: male
+                    userId: 1
+                    category:
+                      id: 10
+                      name: Страви з м'яса
+                      recipeCount: 0
+                      subcategories: []
+                      parentCategoryId: 2
+                    categoryId: 10
+                averageRating: 3.9
+                totalViews: 368
+        '401':
+          description: Користувач не зареєстрований.
+    put:
+      tags:
+        - User
+      summary: Надсилання даних користувача для їх оновлення.
+      description: Обробляє HTTP PUT-запит для надсилання нових даних користувача.
+      requestBody:
+        description: Об'єкт даних користувача для оновлення.
+        required: true
+        content:
+          application/json: 
+            example:
+              id: 1
+              name: Артем
+              surname: Бабенко
+              age: 43
+              gender: male
+              email: artem@gmail.com
+              password: '123123123'
+      responses:
+        '200':
+          description: Успішне оновлення даних користувача.
+        '400':
+          description: Некоректне тіло запиту або користувача не знайдено.
+security:
+  - CookieAuth: []
+components:
+  securitySchemes:
+    CookieAuth:
+      type: apiKey
+      in: cookie
+      name: AuthenticationCookie
