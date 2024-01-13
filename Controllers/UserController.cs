@@ -95,6 +95,7 @@ public class UserController : Controller
     /// Обробляє HTTP GET-запит для отримання поточного користувача з його усіма даними.
     /// </summary>
     [HttpGet]
+    [Authorize]
     [Route("/user")]
     public async Task<IActionResult> GetUser()
     {
